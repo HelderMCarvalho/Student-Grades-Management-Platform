@@ -1,8 +1,7 @@
 # TP_MTW
 Trabalho Prático de MTW
 
-## Frontend
-### Run
+## Run
 Install dependencies: `npm install`
 
 Start: `npm run start`
