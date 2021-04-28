@@ -6,10 +6,14 @@ import {RouterModule} from '@angular/router';
 
 
 import {AppRoutingModule} from './app.routing';
-import {ComponentsModule} from './components/components.module';
+import {PartialsModule} from './partials/partials.module';
 
 import {AppComponent} from './app.component';
 import {AdminLayoutComponent} from './layouts/admin-layout/admin-layout.component';
+import { LoginComponent } from './login/login.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
     imports: [
@@ -17,13 +21,17 @@ import {AdminLayoutComponent} from './layouts/admin-layout/admin-layout.componen
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        ComponentsModule,
+        PartialsModule,
         RouterModule,
         AppRoutingModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
     ],
     declarations: [
         AppComponent,
         AdminLayoutComponent,
+        LoginComponent,
 
     ],
     providers: [],
