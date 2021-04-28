@@ -1,0 +1,74 @@
+
+% Esquema Relacional TP MTW MongoDB
+
+avaliacao : {
+	id: 4596845,
+	id_uc: 2564131,
+	id_curso: 21,
+	anoLetivo: 2021,
+	prof_id: 2564131,
+	regime: laboral,
+	anotacoes: [
+		31,
+		...
+	];
+	criterios: [
+		123,
+		...
+	];
+	alunos: [
+		id,
+		componente_id: [
+			123, ...
+		]; % Nota: Validar a parte da nota final (guardar ou calcular?)
+		anotacoes: [
+			31,
+			...
+		];
+	]
+}
+
+anotacao : {
+	id: 31,
+	conteudo: "sdgdfgfdg"
+}
+
+aluno : {
+	id:2564131,
+	nome: Eduardo,
+	numero: 654,
+	fotografia_path: "./fghg"
+}
+
+curso : {
+	id:21,
+	nome: LESI,
+}
+
+professor : {
+	id: 2564131,
+	nome: Maria,
+	numero: 1641,
+	email: a@a.com,
+	password: 123456,
+	fotografia_path: "./fghg"
+}
+
+unidade_curricular: {
+	id: 2564131,
+	nome: Visão por computador,
+	numero: 1641,
+	ects: 6
+}
+
+criterios: {
+	id: 2564131,
+	nome_criterio: teste,
+	percent: 10
+}
+
+componente: {
+	id:2564131,
+	id_criterio: 2564131,
+	nota: 10
+}
