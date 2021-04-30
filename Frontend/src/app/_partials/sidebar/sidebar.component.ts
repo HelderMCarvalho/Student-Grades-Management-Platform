@@ -36,6 +36,10 @@ export class SidebarComponent implements OnInit {
         this.logedUser = this.authenticationService.userValue;
     }
 
+    logout() {
+        this.authenticationService.logout();
+    }
+
     isMobileMenu() {
         return $(window).width() <= 991;
     };
