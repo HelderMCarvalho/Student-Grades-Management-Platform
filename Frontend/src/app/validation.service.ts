@@ -12,6 +12,7 @@ export class ValidationService {
             required: 'Required.',
             email: 'Invalid email.',
             invalidPassword: 'Password should have minimum 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number.',
+            passwordMismatch: 'Passwords dont match.',
             minlength: `Minimum length ${validatorValue.requiredLength}.`
         };
         return config[validatorName];

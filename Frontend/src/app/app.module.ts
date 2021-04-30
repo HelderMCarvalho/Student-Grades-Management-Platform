@@ -17,6 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {fakeBackendProvider} from './_services/fake-backend';
 import {AuthInterceptor} from './_services/auth.interceptor';
 import {ErrorInterceptor} from './_services/error.interceptor';
+import {RegisterComponent} from './register/register.component';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import {ErrorInterceptor} from './_services/error.interceptor';
         AppComponent,
         AdminLayoutComponent,
         LoginComponent,
+        RegisterComponent,
 
     ],
     providers: [

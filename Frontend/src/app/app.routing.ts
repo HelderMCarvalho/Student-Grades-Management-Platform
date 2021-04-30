@@ -3,9 +3,10 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule, Routes} from '@angular/router';
 
+import {AuthGuard} from './_services/auth.guard';
 import {AdminLayoutComponent} from './layouts/admin-layout/admin-layout.component';
 import {LoginComponent} from './login/login.component';
-import {AuthGuard} from './_services/auth.guard';
+import {RegisterComponent} from './register/register.component';
 
 const routes: Routes = [
     {
@@ -24,6 +25,9 @@ const routes: Routes = [
     }, {
         path: 'login',
         component: LoginComponent
+    }, {
+        path: 'register',
+        component: RegisterComponent
     }
 ];
 

@@ -1,0 +1,11 @@
+.h {
+    height: 100vh;
+}
+
+.mx-auto {
+    display: block;
+}
+
+label {
+    width: 100%;
+}

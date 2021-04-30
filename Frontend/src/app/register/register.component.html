@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="row h">
+        <div class="col-12 my-auto">
+            <div class="col-12 text-center">
+                <h1>Student Grades Management</h1>
+                <h3>Register</h3>
+            </div>
+            <form [formGroup]="registerForm" (submit)="submitRegister()">
+                <div class="row">
+                    <div class="col-sm-12 offset-md-3 col-md-6">
+                        <mat-form-field>
+                            <label>
+                                <input matInput id="inputEmail" formControlName="inputEmail" placeholder="Email"
+                                       type="email">
+                            </label>
+                        </mat-form-field>
+                        <app-control-messages [control]="registerForm.get('inputEmail')"></app-control-messages>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 offset-md-3 col-md-3">
+                        <mat-form-field>
+                            <label>
+                                <input matInput id="inputFirstName" formControlName="inputFirstName"
+                                       placeholder="First Name" type="text">
+                            </label>
+                        </mat-form-field>
+                        <app-control-messages [control]="registerForm.get('inputFirstName')"></app-control-messages>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <mat-form-field>
+                            <label>
+                                <input matInput id="inputLastName" formControlName="inputLastName"
+                                       placeholder="Last Name" type="text">
+                            </label>
+                        </mat-form-field>
+                        <app-control-messages [control]="registerForm.get('inputLastName')"></app-control-messages>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 offset-md-3 col-md-3">
+                        <mat-form-field>
+                            <label>
+                                <input matInput id="inputPassword" formControlName="inputPassword"
+                                       placeholder="Password" type="password">
+                            </label>
+                        </mat-form-field>
+                        <app-control-messages [control]="registerForm.get('inputPassword')"></app-control-messages>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <mat-form-field>
+                            <label>
+                                <input matInput id="inputConfirmPassword" formControlName="inputConfirmPassword"
+                                       placeholder="Confirm Password" type="password">
+                            </label>
+                        </mat-form-field>
+                        <app-control-messages [control]="registerForm.get('inputConfirmPassword')"></app-control-messages>
+                    </div>
+                </div>
+                <button class="btn btn-success mx-auto" mat-raised-button type="submit">Register</button>
+                <div class="clearfix"></div>
+            </form>
+            <div class="col-12 text-center">
+                <a routerLink="/login" href="">Login</a>
+            </div>
+        </div>
+    </div>
+</div>

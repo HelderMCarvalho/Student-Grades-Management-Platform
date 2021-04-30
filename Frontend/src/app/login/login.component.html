@@ -10,7 +10,8 @@
                     <div class="col-sm-12 offset-md-3 col-md-6">
                         <mat-form-field>
                             <label>
-                                <input matInput id="inputEmail" formControlName="inputEmail" placeholder="Email" type="email">
+                                <input matInput id="inputEmail" formControlName="inputEmail" placeholder="Email"
+                                       type="email">
                             </label>
                         </mat-form-field>
                         <app-control-messages [control]="loginForm.get('inputEmail')"></app-control-messages>
@@ -20,7 +21,8 @@
                     <div class="col-sm-12 offset-md-3 col-md-6">
                         <mat-form-field>
                             <label>
-                                <input matInput id="inputPassword" formControlName="inputPassword" placeholder="Password" type="password">
+                                <input matInput id="inputPassword" formControlName="inputPassword"
+                                       placeholder="Password" type="password">
                             </label>
                         </mat-form-field>
                         <app-control-messages [control]="loginForm.get('inputPassword')"></app-control-messages>
@@ -29,6 +31,9 @@
                 <button class="btn btn-success mx-auto" mat-raised-button type="submit">Login</button>
                 <div class="clearfix"></div>
             </form>
+            <div class="col-12 text-center">
+                <a routerLink="/register" href="">Register</a>
+            </div>
         </div>
     </div>
 </div>
