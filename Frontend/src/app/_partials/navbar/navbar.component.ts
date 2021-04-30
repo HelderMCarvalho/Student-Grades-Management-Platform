@@ -2,6 +2,8 @@ import {Component, ElementRef, OnInit} from '@angular/core';
 import {ROUTES} from '../sidebar/sidebar.component';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
+import {AuthenticationService} from '../../_services/authentication.service';
+import {User} from '../../_models/user';
 
 @Component({
     selector: 'app-navbar',
@@ -9,13 +11,14 @@ import {Router} from '@angular/router';
     styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-    location: Location;
     mobile_menu_visible: any = 0;
-    private listTitles: any[];
-    private toggleButton: any;
-    private sidebarVisible: boolean;
+    listTitles: any[];
+    toggleButton: any;
+    sidebarVisible: boolean;
+    logedUser: User;
 
-    constructor(location: Location, private element: ElementRef, private router: Router) {
+    constructor(private location: Location, private element: ElementRef, private router: Router,
+                private authenticationService: AuthenticationService) {
         this.location = location;
         this.sidebarVisible = false;
     }
@@ -32,6 +35,11 @@ export class NavbarComponent implements OnInit {
                 this.mobile_menu_visible = 0;
             }
         });
+        this.logedUser = this.authenticationService.userValue;
+    }
+
+    logout() {
+        this.authenticationService.logout();
     }
 
     sidebarOpen() {

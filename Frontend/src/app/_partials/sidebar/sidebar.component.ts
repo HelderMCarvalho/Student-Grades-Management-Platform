@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {AuthenticationService} from '../../_services/authentication.service';
+import {User} from '../../_models/user';
 
 declare const $: any;
 
@@ -25,11 +27,13 @@ export const ROUTES: RouteInfo[] = [
 })
 export class SidebarComponent implements OnInit {
     menuItems: RouteInfo[];
+    logedUser: User;
 
-    constructor() { }
+    constructor(private authenticationService: AuthenticationService) { }
 
     ngOnInit() {
         this.menuItems = ROUTES.filter(menuItem => menuItem);
+        this.logedUser = this.authenticationService.userValue;
     }
 
     isMobileMenu() {

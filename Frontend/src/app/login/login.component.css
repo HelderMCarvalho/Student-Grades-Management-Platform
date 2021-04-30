@@ -5,3 +5,7 @@
 .mx-auto {
     display: block;
 }
+
+label {
+    width: 100%;
+}
