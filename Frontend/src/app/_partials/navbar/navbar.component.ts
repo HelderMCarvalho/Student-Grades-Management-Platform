@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
                 this.mobile_menu_visible = 0;
             }
         });
-        this.logedUser = this.authenticationService.userValue;
+        this.logedUser = this.authenticationService.userValue.response.data.user;
     }
 
     logout() {

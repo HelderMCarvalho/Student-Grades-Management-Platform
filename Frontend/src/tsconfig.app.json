@@ -7,7 +7,9 @@
     "types": []
   },
   "exclude": [
+    "**/*.spec.ts",
     "test.ts",
-    "**/*.spec.ts"
+    "./environments/environment.ts",
+    "./environments/environment.prod.ts"
   ]
 }

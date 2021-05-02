@@ -4,7 +4,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
 
-
 import {AppRoutingModule} from './app.routing';
 import {PartialsModule} from './_partials/partials.module';
 
@@ -14,7 +13,6 @@ import {LoginComponent} from './login/login.component';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
-import {fakeBackendProvider} from './_services/fake-backend';
 import {AuthInterceptor} from './_services/auth.interceptor';
 import {ErrorInterceptor} from './_services/error.interceptor';
 import {RegisterComponent} from './register/register.component';
@@ -42,9 +40,6 @@ import {RegisterComponent} from './register/register.component';
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-
-        // provider used to create fake backend
-        fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })

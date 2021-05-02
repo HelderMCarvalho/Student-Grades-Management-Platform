@@ -32,8 +32,18 @@ export class LoginComponent implements OnInit {
 
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
+        this.loginForm.valueChanges.subscribe(() => {
+            if (this.error) {
+                this.error = '';
+            }
+        });
     }
 
+    /**
+     * Form submission.
+     * Sends credentials to authentication service.
+     */
     submitLogin(): void {
         // stop here if form is invalid
         if (this.loginForm.invalid) {

@@ -3,6 +3,8 @@ import {ValidationService} from '../validation.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../_services/authentication.service';
+import {User} from '../_models/user';
+import {first} from 'rxjs/operators';
 
 @Component({
     selector: 'app-register',
@@ -11,6 +13,7 @@ import {AuthenticationService} from '../_services/authentication.service';
 })
 export class RegisterComponent implements OnInit {
 
+    error: string;
     registerForm: FormGroup;
 
     constructor(private validationService: ValidationService, private formBuilder: FormBuilder, private router: Router,
@@ -33,9 +36,21 @@ export class RegisterComponent implements OnInit {
         });
     }
 
+    /**
+     * Form submission.
+     * Sends credentials to authentication service.
+     */
     submitRegister() {
-        alert(this.registerForm.get('inputEmail').value + ' ' + this.registerForm.get('inputFirstName').value + ' '
-            + this.registerForm.get('inputLastName').value + ' ' + this.registerForm.get('inputPassword').value + ' '
-            + this.registerForm.get('inputConfirmPassword').value)
+        if (this.registerForm.invalid) {
+            return;
+        }
+
+        const newUser = new User(this.registerForm.get('inputEmail').value, this.registerForm.get('inputPassword').value,
+            this.registerForm.get('inputFirstName').value, this.registerForm.get('inputLastName').value);
+        this.authenticationService.register(newUser).pipe(first()).subscribe(() => {
+            this.router.navigate(['/login']);
+        }, error => {
+            this.error = error;
+        });
     }
 }

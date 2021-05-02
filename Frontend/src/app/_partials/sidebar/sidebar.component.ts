@@ -33,7 +33,7 @@ export class SidebarComponent implements OnInit {
 
     ngOnInit() {
         this.menuItems = ROUTES.filter(menuItem => menuItem);
-        this.logedUser = this.authenticationService.userValue;
+        this.logedUser = this.authenticationService.userValue.response.data.user;
     }
 
     logout() {
