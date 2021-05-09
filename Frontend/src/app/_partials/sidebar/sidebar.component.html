@@ -8,7 +8,7 @@
 </div>
 <div class="sidebar-wrapper">
     <div *ngIf="isMobileMenu()">
-        <form class="navbar-form">
+        <!--<form class="navbar-form">
             <span class="bmd-form-group">
                 <div class="input-group no-border">
                     <input class="form-control" placeholder="Search..." type="text" value="">
@@ -18,7 +18,7 @@
                     </button>
                 </div>
             </span>
-        </form>
+        </form>-->
         <ul class="nav navbar-nav nav-mobile-menu">
             <li class="nav-item dropdown">
                 <a aria-expanded="false" aria-haspopup="true" class="nav-link" data-toggle="dropdown"
@@ -41,7 +41,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="" (click)="logout()">
+                <a (click)="logout()" class="nav-link pointer">
                     <i class="material-icons">logout</i>
                     <p><span class="d-lg-none d-md-block">Logout</span></p>
                 </a>

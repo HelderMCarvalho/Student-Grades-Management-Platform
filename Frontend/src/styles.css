@@ -1,3 +1,7 @@
+.pointer {
+    cursor: pointer;
+}
+
 .invalid-feedback {
     display: unset;
 }

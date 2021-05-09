@@ -1,16 +1,21 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {ROUTES} from '../sidebar/sidebar.component';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {User} from '../../_models/user';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-navbar',
     templateUrl: './navbar.component.html',
     styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
+
+    // Subscriptions aggregator, push all "subscribes" here to be able to destroy all of them at once
+    subscriptions: Subscription[] = [];
+
     mobile_menu_visible: any = 0;
     listTitles: any[];
     toggleButton: any;
@@ -27,15 +32,22 @@ export class NavbarComponent implements OnInit {
         this.listTitles = ROUTES.filter(listTitle => listTitle);
         const navbar: HTMLElement = this.element.nativeElement;
         this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];
-        this.router.events.subscribe(() => {
-            this.sidebarClose();
-            const $layer: any = document.getElementsByClassName('close-layer')[0];
-            if ($layer) {
-                $layer.remove();
-                this.mobile_menu_visible = 0;
-            }
-        });
+        this.subscriptions.push(
+            this.router.events.subscribe(() => {
+                this.sidebarClose();
+                const $layer: any = document.getElementsByClassName('close-layer')[0];
+                if ($layer) {
+                    $layer.remove();
+                    this.mobile_menu_visible = 0;
+                }
+            })
+        );
         this.logedUser = this.authenticationService.userValue.response.data.user;
+    }
+
+    ngOnDestroy() {
+        // Destroy all subscriptions
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
     logout() {

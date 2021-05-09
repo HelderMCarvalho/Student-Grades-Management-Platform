@@ -1,17 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ValidationService} from '../validation.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../_services/authentication.service';
 import {User} from '../_models/user';
 import {first} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
+
+    // Subscriptions aggregator, push all "subscribes" here to be able to destroy all of them at once
+    subscriptions: Subscription[] = [];
 
     error: string;
     registerForm: FormGroup;
@@ -36,6 +40,11 @@ export class RegisterComponent implements OnInit {
         });
     }
 
+    ngOnDestroy() {
+        // Destroy all subscriptions
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    }
+
     /**
      * Form submission.
      * Sends credentials to authentication service.
@@ -47,10 +56,12 @@ export class RegisterComponent implements OnInit {
 
         const newUser = new User(this.registerForm.get('inputEmail').value, this.registerForm.get('inputPassword').value,
             this.registerForm.get('inputFirstName').value, this.registerForm.get('inputLastName').value);
-        this.authenticationService.register(newUser).pipe(first()).subscribe(() => {
-            this.router.navigate(['/login']);
-        }, error => {
-            this.error = error;
-        });
+        this.subscriptions.push(
+            this.authenticationService.register(newUser).pipe(first()).subscribe(() => {
+                this.router.navigate(['/login']);
+            }, error => {
+                this.error = error;
+            })
+        );
     }
 }

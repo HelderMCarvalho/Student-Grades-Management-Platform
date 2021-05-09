@@ -16,6 +16,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {AuthInterceptor} from './_services/auth.interceptor';
 import {ErrorInterceptor} from './_services/error.interceptor';
 import {RegisterComponent} from './register/register.component';
+import {CreateEditClassComponent} from './create-edit-class/create-edit-class.component';
+import {MatSelectModule} from '@angular/material/select';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
     imports: [
@@ -29,12 +34,17 @@ import {RegisterComponent} from './register/register.component';
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
+        MatSelectModule,
+        MatAutocompleteModule,
+        MatChipsModule,
+        MatIconModule
     ],
     declarations: [
         AppComponent,
         AdminLayoutComponent,
         LoginComponent,
         RegisterComponent,
+        CreateEditClassComponent,
 
     ],
     providers: [

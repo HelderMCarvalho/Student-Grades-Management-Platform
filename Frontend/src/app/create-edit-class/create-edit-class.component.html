@@ -1,0 +1,101 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form (submit)="submitClass()" [formGroup]="classForm">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Course</mat-label>
+                                        <mat-select formControlName="inputCourse" id="inputCourse">
+                                            <mat-option *ngFor="let course of courses" [value]="course._id">
+                                                {{course.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <app-control-messages
+                                            [control]="classForm.get('inputCourse')"></app-control-messages>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Subject</mat-label>
+                                        <mat-select formControlName="inputSubject" id="inputSubject">
+                                            <mat-option *ngFor="let subject of subjects" [value]="subject._id">
+                                                {{subject.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <app-control-messages
+                                            [control]="classForm.get('inputSubject')"></app-control-messages>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Year</mat-label>
+                                        <mat-select formControlName="inputYear" id="inputYear">
+                                            <mat-option *ngFor="let year of years" [value]="year._id">
+                                                {{year.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <app-control-messages [control]="classForm.get('inputYear')"></app-control-messages>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Frequency Regime</mat-label>
+                                        <mat-select formControlName="inputFrequencyRegime" id="inputFrequencyRegime">
+                                            <mat-option *ngFor="let regime of frequencyRegimes" [value]="regime._id">
+                                                {{regime.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <app-control-messages
+                                            [control]="classForm.get('inputFrequencyRegime')"></app-control-messages>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Lective Year</mat-label>
+                                        <label for="inputLectiveYear"></label>
+                                        <input formControlName="inputLectiveYear" id="inputLectiveYear" matInput
+                                               type="text">
+                                    </mat-form-field>
+                                    <app-control-messages
+                                            [control]="classForm.get('inputLectiveYear')"></app-control-messages>
+                                </div>
+                                <div class="col-12">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Students</mat-label>
+                                        <mat-chip-list #chipStudents>
+                                            <mat-chip (removed)="remove(student)" *ngFor="let student of signedStudents"
+                                                      [removable]="removable" [selectable]="selectable">
+                                                ({{student.code}}) {{student.name}}
+                                                <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
+                                            </mat-chip>
+                                            <label for="inputStudents"></label>
+                                            <input #inputStudents (matChipInputTokenEnd)="add($event)"
+                                                   [matAutocomplete]="auto"
+                                                   [matChipInputFor]="chipStudents"
+                                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                                   formControlName="inputStudents"
+                                                   id="inputStudents"
+                                                   matInput>
+                                        </mat-chip-list>
+                                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                                            <mat-option *ngFor="let student of filteredStudents | async"
+                                                        [value]="student">
+                                                ({{student.code}}) {{student.name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <button class="btn btn-success pull-right" mat-raised-button type="submit">Create</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

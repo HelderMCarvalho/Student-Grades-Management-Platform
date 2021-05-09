@@ -8,22 +8,20 @@
             <form [formGroup]="loginForm" (submit)="submitLogin()" (keyup.enter)="submitLogin()">
                 <div class="row">
                     <div class="col-sm-12 offset-md-3 col-md-6">
-                        <mat-form-field>
-                            <label>
-                                <input matInput id="inputEmail" formControlName="inputEmail" placeholder="Email"
-                                       type="email">
-                            </label>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Email</mat-label>
+                            <label for="inputEmail"></label>
+                            <input formControlName="inputEmail" id="inputEmail" matInput type="email">
                         </mat-form-field>
                         <app-control-messages [control]="loginForm.get('inputEmail')"></app-control-messages>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12 offset-md-3 col-md-6">
-                        <mat-form-field>
-                            <label>
-                                <input matInput id="inputPassword" formControlName="inputPassword"
-                                       placeholder="Password" type="password">
-                            </label>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Password</mat-label>
+                            <label for="inputPassword"></label>
+                            <input formControlName="inputPassword" id="inputPassword" matInput type="password">
                         </mat-form-field>
                         <app-control-messages [control]="loginForm.get('inputPassword')"></app-control-messages>
                     </div>

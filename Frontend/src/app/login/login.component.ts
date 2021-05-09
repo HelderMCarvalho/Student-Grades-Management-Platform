@@ -1,16 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ValidationService} from '../validation.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../_services/authentication.service';
 import {first} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+
+    // Subscriptions aggregator, push all "subscribes" here to be able to destroy all of them at once
+    subscriptions: Subscription[] = [];
 
     returnUrl: string;
     error = '';
@@ -33,11 +37,18 @@ export class LoginComponent implements OnInit {
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
-        this.loginForm.valueChanges.subscribe(() => {
-            if (this.error) {
-                this.error = '';
-            }
-        });
+        this.subscriptions.push(
+            this.loginForm.valueChanges.subscribe(() => {
+                if (this.error) {
+                    this.error = '';
+                }
+            })
+        );
+    }
+
+    ngOnDestroy() {
+        // Destroy all subscriptions
+        this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
     /**
@@ -50,11 +61,13 @@ export class LoginComponent implements OnInit {
             return;
         }
 
-        this.authenticationService.login(this.loginForm.controls.inputEmail.value, this.loginForm.controls.inputPassword.value)
-            .pipe(first()).subscribe(() => {
-            this.router.navigate([this.returnUrl]);
-        }, error => {
-            this.error = error;
-        });
+        this.subscriptions.push(
+            this.authenticationService.login(this.loginForm.controls.inputEmail.value, this.loginForm.controls.inputPassword.value)
+                .pipe(first()).subscribe(() => {
+                this.router.navigate([this.returnUrl]);
+            }, error => {
+                this.error = error;
+            })
+        );
     }
 }

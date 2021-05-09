@@ -5,9 +5,9 @@ const _ = require('lodash');
 const User = require("../models/user");
 
 // Temp Users array (while there is no DB)
-const users = [{email: 'test@test.com', password: 'Aa111111', firstName: 'Test', lastName: 'User'}];
+const users = [{_id: 12345, email: 'test@test.com', password: 'Aa111111', firstName: 'Test', lastName: 'User'}];
 
-/* POST new authentication. */
+// POST new authentication
 router.post('/', function (req, res, next) {
     // Get User (not yet from DB)
     // (doing a cloneDeep in order to clear the password before sending the user information, might not be necessary
@@ -39,10 +39,9 @@ router.post('/', function (req, res, next) {
             }
         });
     }
-
 });
 
-/* POST register User. */
+// POST register User
 router.post('/register', function (req, res, next) {
     // Get User (not yet from DB)
     const user = users.find(user => req.body.newUser.email === user.email);

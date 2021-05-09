@@ -10,17 +10,22 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const authenticationRouter = require('./routes/authentication');
 const usersRouter = require('./routes/users');
+const coursesRouter = require('./routes/courses');
+const studentsRouter = require('./routes/students');
+const subjectsRouter = require('./routes/subjects');
+const classesRouter = require('./routes/classes');
 
 const app = express();
 
 // Temp Users array (while there is no DB)
-const users = [{email: 'test@test.com', password: 'Aa111111', firstName: 'Test', lastName: 'User'}];
+const users = [{_id: 12345, email: 'test@test.com', password: 'Aa111111', firstName: 'Test', lastName: 'User'},
+    {_id: 67890, email: 'test1@test.com', password: 'Aa111111', firstName: 'Helder', lastName: 'Carvalho'}];
 
-const corsOptions = {
+/*const corsOptions = {
     origin: '*',
     methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization'
-}
+}*/
 
 app.use(cors()); // https://expressjs.com/en/resources/middleware/cors.html
 app.options('*', cors()); // Enabling CORS Pre-Flight
@@ -71,5 +76,9 @@ app.use(function (req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/courses', coursesRouter);
+app.use('/students', studentsRouter);
+app.use('/subjects', subjectsRouter);
+app.use('/classes', classesRouter);
 
 module.exports = app;

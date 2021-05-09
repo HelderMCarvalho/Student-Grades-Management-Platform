@@ -8,53 +8,50 @@
             <form [formGroup]="registerForm" (submit)="submitRegister()" (keyup.enter)="submitRegister()">
                 <div class="row">
                     <div class="col-sm-12 offset-md-3 col-md-6">
-                        <mat-form-field>
-                            <label>
-                                <input matInput id="inputEmail" formControlName="inputEmail" placeholder="Email"
-                                       type="email">
-                            </label>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Email</mat-label>
+                            <label for="inputEmail"></label>
+                            <input formControlName="inputEmail" id="inputEmail" matInput type="email">
                         </mat-form-field>
                         <app-control-messages [control]="registerForm.get('inputEmail')"></app-control-messages>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12 offset-md-3 col-md-3">
-                        <mat-form-field>
-                            <label>
-                                <input matInput id="inputFirstName" formControlName="inputFirstName"
-                                       placeholder="First Name" type="text">
-                            </label>
+                        <mat-form-field appearance="standard">
+                            <mat-label>First Name</mat-label>
+                            <label for="inputFirstName"></label>
+                            <input formControlName="inputFirstName" id="inputFirstName" matInput type="text">
                         </mat-form-field>
                         <app-control-messages [control]="registerForm.get('inputFirstName')"></app-control-messages>
                     </div>
                     <div class="col-sm-12 col-md-3">
-                        <mat-form-field>
-                            <label>
-                                <input matInput id="inputLastName" formControlName="inputLastName"
-                                       placeholder="Last Name" type="text">
-                            </label>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Last Name</mat-label>
+                            <label for="inputLastName"></label>
+                            <input formControlName="inputLastName" id="inputLastName" matInput type="text">
                         </mat-form-field>
                         <app-control-messages [control]="registerForm.get('inputLastName')"></app-control-messages>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12 offset-md-3 col-md-3">
-                        <mat-form-field>
-                            <label>
-                                <input matInput id="inputPassword" formControlName="inputPassword"
-                                       placeholder="Password" type="password">
-                            </label>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Password</mat-label>
+                            <label for="inputPassword"></label>
+                            <input formControlName="inputPassword" id="inputPassword" matInput type="password">
                         </mat-form-field>
                         <app-control-messages [control]="registerForm.get('inputPassword')"></app-control-messages>
                     </div>
                     <div class="col-sm-12 col-md-3">
-                        <mat-form-field>
-                            <label>
-                                <input matInput id="inputConfirmPassword" formControlName="inputConfirmPassword"
-                                       placeholder="Confirm Password" type="password">
-                            </label>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Confirm Password</mat-label>
+                            <label for="inputConfirmPassword"></label>
+                            <input formControlName="inputConfirmPassword" id="inputConfirmPassword" matInput
+                                   type="password">
                         </mat-form-field>
-                        <app-control-messages [control]="registerForm.get('inputConfirmPassword')"></app-control-messages>
+                        <app-control-messages
+                                [control]="registerForm.get('inputConfirmPassword')"></app-control-messages>
                     </div>
                 </div>
                 <div *ngIf="error" class="col-12 text-center">

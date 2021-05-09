@@ -1,48 +1,58 @@
+% Schema TP MTW MongoDB
 
-% Esquema Relacional TP MTW MongoDB
-
-avaliacao : {
-	id: 4596845,
-	id_uc: 2564131,
-	id_curso: 21,
-	anoLetivo: 2021,
-	prof_id: 2564131,
-	regime: laboral,
+class : {
+	_id: number,
+	_id_teacher: number,
+	_id_course: number,
+	_id_subject: number,
+	year: number,                        (1 -> 1st, 2 -> 2nd or 3 -> 3rd)
+	frequency_regime: number,            (1 -> daytime, 2 -> nighttime)
+	lective_year: string,                "20/21"
 	anotacoes: [
-		31,
-		...
-	];
-	criterios: [
-		123,
-		...
-	];
-	alunos: [
-		id,
-		componente_id: [
-			123, ...
-		]; % Nota: Validar a parte da nota final (guardar ou calcular?)
-		anotacoes: [
-			31,
-			...
-		];
-	]
+    		31, ...
+    ],
+    criterios: [
+        123, ...
+    ],
+	students: [
+        {
+            _id: number,
+            componente_id: [
+                123, ...
+            ],                                  (Nota: Validar a parte da nota final (guardar ou calcular?))
+            anotacoes: [
+                31, ...
+            ]
+        }, { ... }
+    ]
 }
+
+course: {
+	_id: number,
+	name: string
+}
+
+subject: {
+	_id: number,
+	_id_course: number,
+	code: number,
+	name: string
+}
+
+student: {
+	_id: number,
+	code: number,
+	name: string,
+	photo_blob: string
+}
+
+
+
+
 
 anotacao : {
 	id: 31,
 	conteudo: "sdgdfgfdg"
-}
-
-aluno : {
-	id:2564131,
-	nome: Eduardo,
-	numero: 654,
-	fotografia_path: "./fghg"
-}
-
-curso : {
-	id:21,
-	nome: LESI,
 }
 
 professor : {
@@ -52,13 +62,6 @@ professor : {
 	email: a@a.com,
 	password: 123456,
 	fotografia_path: "./fghg"
-}
-
-unidade_curricular: {
-	id: 2564131,
-	nome: Visão por computador,
-	numero: 1641,
-	ects: 6
 }
 
 criterios: {
