@@ -1,0 +1,28 @@
+CREATE TABLE Class (_id int IDENTITY(1, 1) NOT NULL, _id_teacher int NOT NULL, _id_subject int NOT NULL, _id_year int NOT NULL, _id_frequency_regime int NOT NULL, lective_year nvarchar(255) NOT NULL, PRIMARY KEY (_id));
+CREATE TABLE Class_Note (Class_id int NOT NULL, Note_id int NOT NULL, PRIMARY KEY (Class_id, Note_id));
+CREATE TABLE Course (_id int IDENTITY(1, 1) NOT NULL, name nvarchar(255) NOT NULL, PRIMARY KEY (_id));
+CREATE TABLE Criteria (_id int IDENTITY(1, 1) NOT NULL, _id_class int NOT NULL, name nvarchar(255) NOT NULL, percentage decimal(3, 3) NOT NULL, PRIMARY KEY (_id));
+CREATE TABLE EvaluationComponent (_id int IDENTITY(1, 1) NOT NULL, _id_criteria int NOT NULL, _id_student int NOT NULL, grade decimal(2, 2) NOT NULL, PRIMARY KEY (_id));
+CREATE TABLE FrequencyRegime (_id int IDENTITY(1, 1) NOT NULL, name nvarchar(255) NOT NULL, PRIMARY KEY (_id));
+CREATE TABLE Note (_id int IDENTITY(1, 1) NOT NULL, content nvarchar(max) NOT NULL, PRIMARY KEY (_id));
+CREATE TABLE Note_Student_Class (Note_id int NOT NULL, Student_ClassStudent_id int NOT NULL, Student_ClassClass_id int NOT NULL, PRIMARY KEY (Note_id, Student_ClassStudent_id, Student_ClassClass_id));
+CREATE TABLE Student (_id int IDENTITY(1, 1) NOT NULL, code int NOT NULL, name nvarchar(255) NOT NULL, photo_blob nvarchar(max) NULL, PRIMARY KEY (_id));
+CREATE TABLE Student_Class (Student_id int NOT NULL UNIQUE, Class_id int NOT NULL UNIQUE, PRIMARY KEY (Student_id, Class_id));
+CREATE TABLE Subject (_id int IDENTITY(1, 1) NOT NULL, _id_course int NOT NULL, code int NOT NULL, name int NOT NULL, PRIMARY KEY (_id));
+CREATE TABLE Teacher (_id int IDENTITY(1, 1) NOT NULL, name nvarchar(255) NOT NULL, code int NOT NULL, email nvarchar(255) NOT NULL, password nvarchar(255) NOT NULL, photo_blob nvarchar(max) NULL, PRIMARY KEY (_id));
+CREATE TABLE Year (_id int IDENTITY(1, 1) NOT NULL, name nvarchar(255) NOT NULL, PRIMARY KEY (_id));
+ALTER TABLE Subject ADD CONSTRAINT FKSubject673249 FOREIGN KEY (_id_course) REFERENCES Course (_id);
+ALTER TABLE EvaluationComponent ADD CONSTRAINT FKEvaluation571284 FOREIGN KEY (_id_criteria) REFERENCES Criteria (_id);
+ALTER TABLE Class ADD CONSTRAINT FKClass548984 FOREIGN KEY (_id_teacher) REFERENCES Teacher (_id);
+ALTER TABLE Student_Class ADD CONSTRAINT FKStudent_Cl807390 FOREIGN KEY (Student_id) REFERENCES Student (_id);
+ALTER TABLE Student_Class ADD CONSTRAINT FKStudent_Cl524810 FOREIGN KEY (Class_id) REFERENCES Class (_id);
+ALTER TABLE Class ADD CONSTRAINT FKClass805449 FOREIGN KEY (_id_subject) REFERENCES Subject (_id);
+ALTER TABLE Class ADD CONSTRAINT FKClass745990 FOREIGN KEY (_id_year) REFERENCES Year (_id);
+ALTER TABLE Class ADD CONSTRAINT FKClass966381 FOREIGN KEY (_id_frequency_regime) REFERENCES FrequencyRegime (_id);
+ALTER TABLE Criteria ADD CONSTRAINT FKCriteria554242 FOREIGN KEY (_id_class) REFERENCES Class (_id);
+ALTER TABLE EvaluationComponent ADD CONSTRAINT FKEvaluation972681 FOREIGN KEY (_id_student) REFERENCES Student (_id);
+ALTER TABLE Class_Note ADD CONSTRAINT FKClass_Note555357 FOREIGN KEY (Class_id) REFERENCES Class (_id);
+ALTER TABLE Class_Note ADD CONSTRAINT FKClass_Note491200 FOREIGN KEY (Note_id) REFERENCES Note (_id);
+ALTER TABLE Note_Student_Class ADD CONSTRAINT FKNote_Stude915914 FOREIGN KEY (Note_id) REFERENCES Note (_id);
+ALTER TABLE Note_Student_Class ADD CONSTRAINT FKNote_Stude142023 FOREIGN KEY (Student_ClassStudent_id, Student_ClassClass_id) REFERENCES Student_Class (Student_id, Class_id);
+
