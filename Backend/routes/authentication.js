@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 
-const User = require("../models/user");
-
 // Temp Users array (while there is no DB)
 const users = [{_id: 12345, email: 'test@test.com', password: 'Aa111111', firstName: 'Test', lastName: 'User'}];
 

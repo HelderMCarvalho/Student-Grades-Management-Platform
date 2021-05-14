@@ -5,7 +5,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const auth = require('basic-auth');
-const mongoose = require('mongoose');
+const {Sequelize} = require('sequelize');
 
 const indexRouter = require('./routes/index');
 const authenticationRouter = require('./routes/authentication');
@@ -36,14 +36,21 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/*mongoose.connect("connectionString", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log("Connected to DB!");
-}).catch(() => {
-    console.log("Connection failed!");
-});*/
+const sequelize = new Sequelize('eduard25_mtw', 'eduard25_ipca', '?k242qaI', {
+    host: 'eduardoliveiradev.pt',
+    port: '1433',
+    dialect: 'mssql',
+    dialectOptions: {
+        encrypt: true
+    }
+});
+
+// Connect to DB
+sequelize.authenticate().then(() => {
+    console.log('Connected to DB!');
+}).catch((error) => {
+    console.error('Not connected to DB because ', error);
+});
 
 // All routes start here
 app.use('/authentication', authenticationRouter);
