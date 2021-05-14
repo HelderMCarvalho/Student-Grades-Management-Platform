@@ -22,7 +22,7 @@ export class AuthenticationService {
     /**
      * Get logged user.
      */
-    get userValue() {
+    get userValue(): AuthResponse {
         return this.userSubject.value;
     }
 
@@ -31,7 +31,7 @@ export class AuthenticationService {
      * @param email User email
      * @param password User password
      */
-    login(email: string, password: string) {
+    login(email: string, password: string): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${environment.apiUrl}/authentication`, {email, password})
             .pipe(map(user => {
                 // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
@@ -46,7 +46,7 @@ export class AuthenticationService {
      * POST User for registration.
      * @param newUser User information
      */
-    register(newUser: User) {
+    register(newUser: User): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${environment.apiUrl}/authentication/register`, {newUser})
             .pipe(map(user => { return user; }));
     }

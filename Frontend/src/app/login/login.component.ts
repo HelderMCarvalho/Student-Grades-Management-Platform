@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
 
     returnUrl: string;
-    error = '';
+    error = false;
     loginForm: FormGroup;
 
     constructor(private validationService: ValidationService, private formBuilder: FormBuilder, private router: Router,
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.loginForm.valueChanges.subscribe(() => {
                 if (this.error) {
-                    this.error = '';
+                    this.error = false;
                 }
             })
         );
@@ -63,11 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.authenticationService.login(this.loginForm.controls.inputEmail.value, this.loginForm.controls.inputPassword.value)
-                .pipe(first()).subscribe(() => {
-                this.router.navigate([this.returnUrl]);
-            }, error => {
-                this.error = error;
-            })
+                .pipe(first()).subscribe(() => { this.router.navigate([this.returnUrl]); }, () => { this.error = true; })
         );
     }
 }

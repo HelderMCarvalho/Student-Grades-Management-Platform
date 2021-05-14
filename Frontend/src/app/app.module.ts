@@ -16,11 +16,15 @@ import {MatButtonModule} from '@angular/material/button';
 import {AuthInterceptor} from './_services/auth.interceptor';
 import {ErrorInterceptor} from './_services/error.interceptor';
 import {RegisterComponent} from './register/register.component';
-import {CreateEditClassComponent} from './create-edit-class/create-edit-class.component';
+import {CreateEditClassComponent} from './_class/create-edit-class/create-edit-class.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
+import {ListClassesComponent} from './_class/list-classes/list-classes.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
     imports: [
@@ -37,7 +41,10 @@ import {MatIconModule} from '@angular/material/icon';
         MatSelectModule,
         MatAutocompleteModule,
         MatChipsModule,
-        MatIconModule
+        MatIconModule,
+        MatTableModule,
+        MatSortModule,
+        MatPaginatorModule
     ],
     declarations: [
         AppComponent,
@@ -45,7 +52,7 @@ import {MatIconModule} from '@angular/material/icon';
         LoginComponent,
         RegisterComponent,
         CreateEditClassComponent,
-
+        ListClassesComponent,
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

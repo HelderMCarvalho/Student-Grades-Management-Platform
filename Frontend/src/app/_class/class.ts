@@ -15,8 +15,8 @@ export class Class {
      * @param _id_teacher Id of the teacher
      * @param _id_course Id of the Course
      * @param _id_subject Id of the Subject
-     * @param year Year of the Class (1 -> 1st, 2 -> 2nd or 3 -> 3rd)
-     * @param frequency_regime Frequency Regime of the Class (1 - Daytime or 2 - Nighttime)
+     * @param year Year of the Class ((1) 1st, (2) 2nd or (3) 3rd)
+     * @param frequency_regime Frequency Regime of the Class ((1) Daytime or (2) Nighttime)
      * @param lective_year Lective year of the Course (20/21)
      * @param students Students in the Class (array of StudentPerClass)
      */

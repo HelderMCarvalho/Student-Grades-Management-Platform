@@ -1,18 +1,19 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ValidationService} from '../validation.service';
-import {SgmService} from '../_services/sgm.service';
+import {ValidationService} from '../../validation.service';
+import {SgmService} from '../../_services/sgm.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Observable} from 'rxjs';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {map, startWith} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
-import {Course} from '../_models/course';
-import {Subject} from '../_models/subject';
-import {Student} from '../_models/student';
-import {Class, StudentPerClass} from '../_models/class';
-import {AuthenticationService} from '../_services/authentication.service';
+import {Course} from '../../_models/course';
+import {Subject} from '../../_models/subject';
+import {Student} from '../../_models/student';
+import {Class, StudentPerClass} from '../class';
+import {AuthenticationService} from '../../_services/authentication.service';
+import {ClassService} from '../class.service';
 
 @Component({
     selector: 'app-create-edit-class',
@@ -24,6 +25,7 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     // Subscriptions aggregator, push all "subscribes" here to be able to destroy all of them at once
     subscriptions: Subscription[] = [];
 
+    error = false;
     classForm: FormGroup;
     courses: Course[];
     subjects: Subject[];
@@ -39,7 +41,7 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     @ViewChild('inputStudents') inputStudentsChild: ElementRef<HTMLInputElement>;
 
     constructor(private validationService: ValidationService, private formBuilder: FormBuilder, private sgmService: SgmService,
-                private authenticationService: AuthenticationService) { }
+                private classService: ClassService, private authenticationService: AuthenticationService) { }
 
     ngOnInit(): void {
         this.classForm = this.formBuilder.group({
@@ -51,8 +53,8 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
             inputStudents: [null],
         });
 
-        this.courses = this.sgmService.getCourses().sort((a, b) => a.name.localeCompare(b.name));
-        this.allStudents = this.sgmService.getAllStudents().sort();
+        this.subscriptions.push(this.sgmService.getCourses().subscribe(courses => this.courses = courses));
+        this.subscriptions.push(this.sgmService.getAllStudents().subscribe(students => this.allStudents = students));
 
         // Check for changes in the "inputCourse" and update the Subject list with the Subjects of that Course
         this.subscriptions.push(
@@ -61,7 +63,7 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
                 this.classForm.get('inputSubject').reset();
 
                 // Get the subjects for the indicated Course (course Id in "value")
-                this.subjects = this.sgmService.getSubjects(value);
+                this.subscriptions.push(this.sgmService.getSubjects(value).subscribe(subjects => this.subjects = subjects));
             })
         );
 
@@ -69,6 +71,14 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
         this.filteredStudents = this.classForm.get('inputStudents').valueChanges.pipe(
             startWith(null as boolean),
             map((inputText: string | null) => inputText ? this._filter(inputText) : this.allStudents.slice())
+        );
+
+        this.subscriptions.push(
+            this.classForm.valueChanges.subscribe(() => {
+                if (this.error) {
+                    this.error = false;
+                }
+            })
         );
     }
 
@@ -91,9 +101,10 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
         const studentsInClass: StudentPerClass[] = [];
         this.signedStudents.forEach(student => studentsInClass.push(new StudentPerClass(student._id)));
 
-        this.sgmService.createClass(new Class(this.authenticationService.userValue.response.data.user._id,
+        this.classService.createClass(new Class(this.authenticationService.userValue.response.data.user._id,
             this.classForm.get('inputCourse').value, this.classForm.get('inputSubject').value, this.classForm.get('inputYear').value,
-            this.classForm.get('inputFrequencyRegime').value, this.classForm.get('inputLectiveYear').value, studentsInClass));
+            this.classForm.get('inputFrequencyRegime').value, this.classForm.get('inputLectiveYear').value, studentsInClass)).subscribe(
+            () => this.error = false, () => this.error = true);
     }
 
     /**

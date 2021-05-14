@@ -7,12 +7,22 @@ const subjects = [{_id: 1, _id_course: 1, code: 11, name: 'Multimédia e Tecnolo
     {_id: 3, _id_course: 2, code: 23, name: 'Desenvolvimento Web I'},
     {_id: 4, _id_course: 2, code: 24, name: 'A Desenvolvimento Web II'}];
 
-// GET Subjects
+// GET all Subjects
+router.get('/', function (req, res, next) {
+    res.status(200).send({
+        response: {
+            message: 'Subjects sent with success!',
+            data: subjects
+        }
+    });
+});
+
+// GET Subjects belonging to a specific Course
 router.get('/:_id_course', function (req, res, next) {
     res.status(200).send({
         response: {
             message: 'Subjects sent with success!',
-            data: subjects.filter(subject => subject._id_course === +req.params._id_course)
+            data: subjects.filter(subject => subject._id_course === +req.params._id_course) // Make sure to send an array, even if there is only 1 object, otherwise the frontend will not work
         }
     });
 });

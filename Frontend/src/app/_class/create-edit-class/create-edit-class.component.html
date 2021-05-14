@@ -74,8 +74,7 @@
                                             </mat-chip>
                                             <label for="inputStudents"></label>
                                             <input #inputStudents (matChipInputTokenEnd)="add($event)"
-                                                   [matAutocomplete]="auto"
-                                                   [matChipInputFor]="chipStudents"
+                                                   [matAutocomplete]="auto" [matChipInputFor]="chipStudents"
                                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                                    formControlName="inputStudents"
                                                    id="inputStudents"
@@ -89,8 +88,12 @@
                                         </mat-autocomplete>
                                     </mat-form-field>
                                 </div>
+                                <div class="col-12 text-center">
+                                    <p *ngIf="error" class="invalid-feedback">Error creating Class!</p>
+                                    <button class="btn btn-success pull-right" mat-raised-button type="submit">Create
+                                    </button>
+                                </div>
                             </div>
-                            <button class="btn btn-success pull-right" mat-raised-button type="submit">Create</button>
                             <div class="clearfix"></div>
                         </form>
                     </div>

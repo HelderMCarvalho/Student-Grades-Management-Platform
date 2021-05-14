@@ -1,0 +1,86 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <a class="btn btn-just-icon" mat-raised-button routerLink="/class/create">
+                            <span class="material-icons">add</span>
+                        </a>
+                        <mat-form-field>
+                            <mat-label>Filter</mat-label>
+                            <label for="inputTableFilter"></label>
+                            <input #input (keyup)="applyFilter($event)" id="inputTableFilter" matInput>
+                        </mat-form-field>
+
+                        <div class="mat-elevation-z3 table-responsive">
+                            <table [dataSource]="dataSource" class="table" mat-table matSort>
+
+                                <!-- ID Column -->
+                                <ng-container matColumnDef="_id">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+                                    <td *matCellDef="let row" mat-cell>{{row._id}}</td>
+                                </ng-container>
+
+                                <!-- Course Column -->
+                                <ng-container matColumnDef="course">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header>Course</th>
+                                    <td *matCellDef="let row" mat-cell>{{row._id_course}}</td>
+                                </ng-container>
+
+                                <!-- Subject Column -->
+                                <ng-container matColumnDef="subject">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header>Subject</th>
+                                    <td *matCellDef="let row" mat-cell>{{row._id_subject}}</td>
+                                </ng-container>
+
+                                <!-- Year Column -->
+                                <ng-container matColumnDef="year">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header>Year</th>
+                                    <td *matCellDef="let row" mat-cell>{{row.year}}</td>
+                                </ng-container>
+
+                                <!-- Frequency Regime Column -->
+                                <ng-container matColumnDef="frequency_regime">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header>Frequency Regime</th>
+                                    <td *matCellDef="let row"
+                                        mat-cell>{{row.frequency_regime}}</td>
+                                </ng-container>
+
+                                <!-- Lective Year Column -->
+                                <ng-container matColumnDef="lective_year">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header>Lective Year</th>
+                                    <td *matCellDef="let row" mat-cell>{{row.lective_year}}</td>
+                                </ng-container>
+
+                                <!-- Options Column -->
+                                <ng-container matColumnDef="options">
+                                    <th *matHeaderCellDef mat-header-cell mat-sort-header>Options</th>
+                                    <td *matCellDef="let row" mat-cell>
+                                        <a class="btn btn-warning btn-just-icon" mat-raised-button
+                                           routerLink="/class/edit/{{row._id}}">
+                                            <span class="material-icons">edit</span>
+                                        </a>
+                                        <a (click)="deleteClass(row._id)" class="btn btn-danger btn-just-icon pointer"
+                                           mat-raised-button>
+                                            <span class="material-icons">delete</span>
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                                <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+
+                                <!-- Row shown when there is no matching data. -->
+                                <tr *matNoDataRow class="mat-row">
+                                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                                </tr>
+                            </table>
+                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
