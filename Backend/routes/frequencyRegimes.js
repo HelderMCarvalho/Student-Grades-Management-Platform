@@ -2,17 +2,15 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require('../db');
 
-// GET Courses
+// GET all Frequency Regimes
 router.get('/', function (req, res, next) {
     async function run() {
-        const courses = await sequelize.models.Course.findAll({
-            include: {all: true, nested: true},
-        });
+        const frequencyRegimes = await sequelize.models.FrequencyRegime.findAll();
 
         res.status(200).send({
             response: {
-                message: 'Courses sent with success!',
-                data: courses
+                message: 'Frequency Regimes sent with success!',
+                data: frequencyRegimes
             }
         });
     }

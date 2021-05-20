@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import * as Chartist from 'chartist';
-import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 
 @Component({
@@ -71,11 +70,6 @@ export class DashboardComponent implements OnInit {
     };
 
     ngOnInit() {
-
-        this.http.get<{ message: string }>(`${environment.apiUrl}/users`).subscribe(responseData => {
-            console.log(responseData);
-        });
-
         /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
         const dataDailySalesChart: any = {

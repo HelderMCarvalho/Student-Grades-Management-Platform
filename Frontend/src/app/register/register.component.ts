@@ -3,9 +3,10 @@ import {ValidationService} from '../validation.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../_services/authentication.service';
-import {User} from '../_models/user';
+import {Teacher} from '../_models/teacher';
 import {first} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
+import {sha512} from 'js-sha512';
 
 @Component({
     selector: 'app-register',
@@ -31,6 +32,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.registerForm = this.formBuilder.group({
             inputEmail: ['', [Validators.required, Validators.email]],
+            inputCode: ['', Validators.required],
             inputFirstName: ['', Validators.required],
             inputLastName: ['', Validators.required],
             inputPassword: ['', [Validators.required, this.validationService.passwordValidator()]],
@@ -54,8 +56,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const newUser = new User(this.registerForm.get('inputEmail').value, this.registerForm.get('inputPassword').value,
-            this.registerForm.get('inputFirstName').value, this.registerForm.get('inputLastName').value);
+        const newUser = new Teacher(this.registerForm.get('inputEmail').value, this.registerForm.get('inputCode').value,
+            sha512(this.registerForm.get('inputPassword').value), this.registerForm.get('inputFirstName').value,
+            this.registerForm.get('inputLastName').value);
         this.subscriptions.push(
             this.authenticationService.register(newUser).pipe(first()).subscribe(() => {
                 this.router.navigate(['/login']);

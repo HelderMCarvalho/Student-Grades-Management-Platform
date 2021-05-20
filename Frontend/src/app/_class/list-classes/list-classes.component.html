@@ -25,26 +25,26 @@
                                 <!-- Course Column -->
                                 <ng-container matColumnDef="course">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header>Course</th>
-                                    <td *matCellDef="let row" mat-cell>{{row._id_course}}</td>
+                                    <td *matCellDef="let row" mat-cell>{{row.Subject.Course.name}}</td>
                                 </ng-container>
 
                                 <!-- Subject Column -->
                                 <ng-container matColumnDef="subject">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header>Subject</th>
-                                    <td *matCellDef="let row" mat-cell>{{row._id_subject}}</td>
+                                    <td *matCellDef="let row" mat-cell>{{row.Subject.name}}</td>
                                 </ng-container>
 
                                 <!-- Year Column -->
                                 <ng-container matColumnDef="year">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header>Year</th>
-                                    <td *matCellDef="let row" mat-cell>{{row.year}}</td>
+                                    <td *matCellDef="let row" mat-cell>{{row.Year.name}}</td>
                                 </ng-container>
 
                                 <!-- Frequency Regime Column -->
                                 <ng-container matColumnDef="frequency_regime">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header>Frequency Regime</th>
                                     <td *matCellDef="let row"
-                                        mat-cell>{{row.frequency_regime}}</td>
+                                        mat-cell>{{row.FrequencyRegime.name}}</td>
                                 </ng-container>
 
                                 <!-- Lective Year Column -->
@@ -73,7 +73,9 @@
 
                                 <!-- Row shown when there is no matching data. -->
                                 <tr *matNoDataRow class="mat-row">
-                                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                                    <td [colSpan]="displayedColumns.length" class="mat-cell">No data matching the filter
+                                        "{{input.value}}"
+                                    </td>
                                 </tr>
                             </table>
                             <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]"></mat-paginator>

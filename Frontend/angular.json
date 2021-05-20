@@ -40,7 +40,8 @@
             "allowedCommonJsDependencies" : [
               "rxjs/add/operator/filter",
               "jquery",
-              "chartist"
+              "chartist",
+              "js-sha512"
             ]
           },
           "configurations": {

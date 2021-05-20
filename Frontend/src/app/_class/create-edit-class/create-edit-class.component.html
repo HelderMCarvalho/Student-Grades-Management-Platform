@@ -69,7 +69,7 @@
                                         <mat-chip-list #chipStudents>
                                             <mat-chip (removed)="remove(student)" *ngFor="let student of signedStudents"
                                                       [removable]="removable" [selectable]="selectable">
-                                                ({{student.code}}) {{student.name}}
+                                                ({{student.code}}) {{student.firstName + ' ' + student.lastName}}
                                                 <mat-icon *ngIf="removable" matChipRemove>cancel</mat-icon>
                                             </mat-chip>
                                             <label for="inputStudents"></label>
@@ -83,14 +83,18 @@
                                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                                             <mat-option *ngFor="let student of filteredStudents | async"
                                                         [value]="student">
-                                                ({{student.code}}) {{student.name}}
+                                                ({{student.code}}) {{student.firstName + ' ' + student.lastName}}
                                             </mat-option>
                                         </mat-autocomplete>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-12 text-center">
                                     <p *ngIf="error" class="invalid-feedback">Error creating Class!</p>
-                                    <button class="btn btn-success pull-right" mat-raised-button type="submit">Create
+                                    <button *ngIf="!activatedRoute.snapshot.paramMap.get('_id_class')"
+                                            class="btn btn-success pull-right" mat-raised-button type="submit">Create
+                                    </button>
+                                    <button *ngIf="activatedRoute.snapshot.paramMap.get('_id_class')"
+                                            class="btn btn-success pull-right" mat-raised-button type="submit">Update
                                     </button>
                                 </div>
                             </div>

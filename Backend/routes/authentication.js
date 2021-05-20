@@ -1,70 +1,84 @@
 const express = require('express');
 const router = express.Router();
-const _ = require('lodash');
+const {Op} = require("sequelize");
+const sequelize = require('../db');
 
-// Temp Users array (while there is no DB)
-const users = [{_id: 12345, email: 'test@test.com', password: 'Aa111111', firstName: 'Test', lastName: 'User'}];
-
-// POST new authentication
+// POST authenticate Teacher
 router.post('/', function (req, res, next) {
-    // Get User (not yet from DB)
-    // (doing a cloneDeep in order to clear the password before sending the user information, might not be necessary
-    // when using DB)
-    const user = _.cloneDeep(users.find(user => req.body.email === user.email));
-
-    // Test user
-    if (user && user.password === req.body.password) {
-        // If user exist then allow login.
-
-        // Clear User password to not be sent.
-        user.password = '';
-
-        res.status(200).send({
-            response: {
-                data: {
-                    message: 'Login with success!',
-                    user: user
-                }
+    async function run() {
+        // Get Teacher
+        const teacher = await sequelize.models.Teacher.findOne({
+            where: {
+                email: req.body.email
             }
         });
-    } else {
-        // If User doesnt exist throw error.
-        res.status(400).send({
-            response: {
-                data: {
-                    message: 'Login failed!'
+
+        if (teacher) {
+            // If Teacher exists allow login
+            res.status(200).send({
+                response: {
+                    data: {
+                        message: 'Login with success!',
+                        teacher: teacher
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            // If Teacher doesnt exist
+            res.status(400).send({
+                response: {
+                    data: {
+                        message: 'Login failed!'
+                    }
+                }
+            });
+        }
     }
+
+    run().then();
 });
 
-// POST register User
+// POST register Teacher
 router.post('/register', function (req, res, next) {
-    // Get User (not yet from DB)
-    const user = users.find(user => req.body.newUser.email === user.email);
+    async function run() {
+        // Get Teacher from DB if exists otherwise Create him
+        const [teacher, created] = await sequelize.models.Teacher.findOrCreate({
+            where: {
+                [Op.or]: [
+                    {email: req.body.newUser.email},
+                    {code: req.body.newUser.code}
+                ]
+            }, defaults: {
+                email: req.body.newUser.email,
+                firstName: req.body.newUser.firstName,
+                lastName: req.body.newUser.lastName,
+                code: req.body.newUser.code,
+                password: req.body.newUser.password
+            }
+        });
 
-    // Test User
-    if (user) {
-        // If User exist throw error.
-        res.status(400).send({
-            response: {
-                data: {
-                    message: 'Register failed!'
+        if (created) {
+            // If Teacher was Created
+            res.status(200).send({
+                response: {
+                    data: {
+                        message: 'Register with success!'
+                    }
                 }
-            }
-        });
-    } else {
-        // If User doesnt exist than create new User.
-        users.push(req.body.newUser);
-        res.status(200).send({
-            response: {
-                data: {
-                    message: 'Register with success!'
+            });
+        } else {
+            // If Teacher already exists
+            res.status(400).send({
+                response: {
+                    data: {
+                        message: 'Register failed!'
+                    }
                 }
-            }
-        });
+            });
+        }
     }
+
+    run().then();
 });
 
 module.exports = router;
