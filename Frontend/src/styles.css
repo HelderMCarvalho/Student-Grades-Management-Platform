@@ -5,3 +5,7 @@
 .invalid-feedback {
     display: unset;
 }
+
+.hidden {
+    display: none;
+}

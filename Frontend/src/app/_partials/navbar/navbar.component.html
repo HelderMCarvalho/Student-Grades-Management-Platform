@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top" xmlns="">
     <div class="container-fluid">
         <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:void(0)">{{getTitle()}}</a>
+            <a class="navbar-brand">{{getTitle()}}</a>
         </div>
         <button (click)="sidebarToggle()" class="navbar-toggler hamburger" mat-raised-button type="button">
             <span class="sr-only">Toggle navigation</span>
@@ -45,8 +45,10 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link">
-                        <i class="material-icons">person</i> {{logedUser.firstName + ' ' + logedUser.lastName}}
-                        <p><span class="d-lg-none d-md-block">{{logedUser.firstName + ' ' + logedUser.lastName}}</span></p>
+                        <i class="material-icons">person</i> {{loggedTeacher.firstName + ' ' + loggedTeacher.lastName}}
+                        <p><span
+                                class="d-lg-none d-md-block">{{loggedTeacher.firstName + ' ' + loggedTeacher.lastName}}</span>
+                        </p>
                     </a>
                 </li>
                 <li class="nav-item">

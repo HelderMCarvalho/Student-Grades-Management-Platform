@@ -7,13 +7,21 @@
             </div>
             <form [formGroup]="registerForm" (submit)="submitRegister()" (keyup.enter)="submitRegister()">
                 <div class="row">
-                    <div class="col-sm-12 offset-md-3 col-md-6">
+                    <div class="col-sm-12 offset-md-3 col-md-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Email</mat-label>
                             <label for="inputEmail"></label>
                             <input formControlName="inputEmail" id="inputEmail" matInput type="email">
                         </mat-form-field>
                         <app-control-messages [control]="registerForm.get('inputEmail')"></app-control-messages>
+                    </div>
+                    <div class="col-sm-12 col-md-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Code</mat-label>
+                            <label for="inputCode"></label>
+                            <input formControlName="inputCode" id="inputCode" matInput type="number">
+                        </mat-form-field>
+                        <app-control-messages [control]="registerForm.get('inputCode')"></app-control-messages>
                     </div>
                 </div>
                 <div class="row">
@@ -55,7 +63,7 @@
                     </div>
                 </div>
                 <div *ngIf="error" class="col-12 text-center">
-                    <p class="invalid-feedback">Email already in use!</p>
+                    <p class="invalid-feedback">Email or Code already in use!</p>
                 </div>
                 <button class="btn btn-success mx-auto" mat-raised-button type="submit">Register</button>
                 <div class="clearfix"></div>

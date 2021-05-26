@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {User} from '../_models/user';
+import {Teacher} from '../_models/teacher';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ export class AuthenticationService {
      * Get logged user.
      */
     get userValue(): AuthResponse {
-        return this.userSubject.value;
+        return JSON.parse(localStorage.getItem('teacher'));
     }
 
     /**
@@ -33,12 +33,12 @@ export class AuthenticationService {
      */
     login(email: string, password: string): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${environment.apiUrl}/authentication`, {email, password})
-            .pipe(map(user => {
-                // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
-                user.authdata = window.btoa(email + ':' + password);
-                localStorage.setItem('user', JSON.stringify(user));
-                this.userSubject.next(user);
-                return user;
+            .pipe(map(response => {
+                // Save Teacher details and basic auth credentials in local storage to keep Teacher logged in between page refreshes
+                response.authdata = window.btoa(email + ':' + password);
+                localStorage.setItem('teacher', JSON.stringify(response));
+                this.userSubject.next(response);
+                return response;
             }));
     }
 
@@ -46,7 +46,7 @@ export class AuthenticationService {
      * POST User for registration.
      * @param newUser User information
      */
-    register(newUser: User): Observable<AuthResponse> {
+    register(newUser: Teacher): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${environment.apiUrl}/authentication/register`, {newUser})
             .pipe(map(user => { return user; }));
     }
@@ -56,9 +56,9 @@ export class AuthenticationService {
      */
     logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('user');
+        localStorage.removeItem('teacher');
         this.userSubject.next(null);
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login']).then();
     }
 }
 
@@ -67,7 +67,7 @@ export class AuthResponse {
     response: {
         data: {
             message: string,
-            user: User
+            teacher: Teacher
         }
     }
 }

@@ -1,12 +1,10 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ClassService} from '../class.service';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {Class} from '../class';
+import {Class} from '../../_models/class';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {Course} from '../../_models/course';
-import {Subject} from '../../_models/subject';
 import {SgmService} from '../../_services/sgm.service';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -25,36 +23,24 @@ export class ListClassesComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    frequencyRegimes: { _id: number, name: string }[] = [{_id: 1, name: 'Daytime'}, {_id: 2, name: 'Nighttime'}];
-    years: { _id: number, name: string }[] = [{_id: 1, name: '1st'}, {_id: 2, name: '2nd'}, {_id: 3, name: '3rd'}];
-    courses: Course[];
-    subjects: Subject[];
-
-    // This is a Class[] but it needs to be any[] in order for the filter to work properly in the table. Why? Because we need to change some
-    // field types, mainly from number to string, so that way we can search for Classes by Course name, Subject name, Year name and
-    // Frequency Regime name.
+    // This is a Class[] but it needs to be any[] because the Backend sends the Class with all of its associations included.
     classes: any[] = [];
 
     constructor(private authenticationService: AuthenticationService, private sgmService: SgmService, private classService: ClassService) {}
 
     ngOnInit(): void {
-        // Get Courses
-        this.subscriptions.push(this.sgmService.getCourses().subscribe(courses => this.courses = courses));
-
-        // Get All Subjects
-        this.subscriptions.push(this.sgmService.getAllSubjects().subscribe(subjects => this.subjects = subjects));
-
         // Get All Classes belonging to logged teacher
         this.subscriptions.push(
-            this.classService.getClasses(this.authenticationService.userValue.response.data.user._id).subscribe(classes => {
+            this.classService.getClasses(this.authenticationService.userValue.response.data.teacher._id).subscribe(classes => {
                 // Save Classes locally
                 this.classes = classes;
+
+                // Do some modifications in order for the Filter to work properly
                 this.classes.forEach(classs => {
-                    // Change Ids to Names in order for the table to look good and for its filter to work properly.
-                    classs._id_course = this.courses.find(course => course._id === classs._id_course).name;
-                    classs._id_subject = this.subjects.find(subject => subject._id === classs._id_subject).name;
-                    classs.year = this.years.find(year => year._id === classs._id).name;
-                    classs.frequency_regime = this.frequencyRegimes.find(frequencyRegime => frequencyRegime._id === classs._id).name;
+                    classs._id_course = classs.Subject.Course.name;
+                    classs._id_subject = classs.Subject.name;
+                    classs._id_year = classs.Year.name;
+                    classs._id_frequency_regime = classs.FrequencyRegime.name;
                 });
 
                 // Assign the Classes to the table

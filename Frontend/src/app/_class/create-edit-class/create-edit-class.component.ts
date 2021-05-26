@@ -11,9 +11,12 @@ import {Subscription} from 'rxjs/Subscription';
 import {Course} from '../../_models/course';
 import {Subject} from '../../_models/subject';
 import {Student} from '../../_models/student';
-import {Class, StudentPerClass} from '../class';
+import {Class} from '../../_models/class';
 import {AuthenticationService} from '../../_services/authentication.service';
 import {ClassService} from '../class.service';
+import {Year} from '../../_models/year';
+import {FrequencyRegime} from '../../_models/frequencyRegime';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-create-edit-class',
@@ -25,14 +28,16 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     // Subscriptions aggregator, push all "subscribes" here to be able to destroy all of them at once
     subscriptions: Subscription[] = [];
 
+    _id_classUpdate: number;
+
     error = false;
     classForm: FormGroup;
     courses: Course[];
     subjects: Subject[];
     allStudents: Student[] = [];
     signedStudents: Student[] = [];
-    frequencyRegimes: { _id: number, name: string }[] = [{_id: 1, name: 'Daytime'}, {_id: 2, name: 'Nighttime'}];
-    years: { _id: number, name: string }[] = [{_id: 1, name: '1st'}, {_id: 2, name: '2nd'}, {_id: 3, name: '3rd'}];
+    frequencyRegimes: FrequencyRegime[];
+    years: Year[];
 
     selectable = true;
     removable = true;
@@ -41,7 +46,8 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     @ViewChild('inputStudents') inputStudentsChild: ElementRef<HTMLInputElement>;
 
     constructor(private validationService: ValidationService, private formBuilder: FormBuilder, private sgmService: SgmService,
-                private classService: ClassService, private authenticationService: AuthenticationService) { }
+                private classService: ClassService, private authenticationService: AuthenticationService, private router: Router,
+                public activatedRoute: ActivatedRoute) { }
 
     ngOnInit(): void {
         this.classForm = this.formBuilder.group({
@@ -53,25 +59,63 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
             inputStudents: [null],
         });
 
-        this.subscriptions.push(this.sgmService.getCourses().subscribe(courses => this.courses = courses));
-        this.subscriptions.push(this.sgmService.getAllStudents().subscribe(students => this.allStudents = students));
+        // Get Years
+        this.subscriptions.push(this.sgmService.getYears().subscribe(years => this.years = years));
 
-        // Check for changes in the "inputCourse" and update the Subject list with the Subjects of that Course
-        this.subscriptions.push(
-            this.classForm.get('inputCourse').valueChanges.subscribe(value => {
+        // Get Frequency Regimes
+        this.subscriptions.push(this.sgmService.getFrequencyRegimes().subscribe(frequencyRegimes =>
+            this.frequencyRegimes = frequencyRegimes
+        ));
+
+        // Get all Students
+        this.subscriptions.push(this.sgmService.getAllStudents().subscribe(students => {
+            this.allStudents = students;
+
+            // Check for changes in the "inputStudents" and update the suggestions
+            this.filteredStudents = this.classForm.get('inputStudents').valueChanges.pipe(
+                startWith(null as boolean),
+                map((inputText: string | null) => inputText ? this._filter(inputText) : this.allStudents.slice())
+            );
+        }));
+
+        // Get Courses
+        this.subscriptions.push(this.sgmService.getCourses().subscribe(courses => {
+            this.courses = courses;
+
+            // Check for changes in the "inputCourse" and update the Subject list with the Subjects of that Course
+            this.subscriptions.push(this.classForm.get('inputCourse').valueChanges.subscribe(value => {
                 // Reset the "inputSubject" in case it has a value before the user changes the Course
                 this.classForm.get('inputSubject').reset();
 
                 // Get the subjects for the indicated Course (course Id in "value")
-                this.subscriptions.push(this.sgmService.getSubjects(value).subscribe(subjects => this.subjects = subjects));
-            })
-        );
+                this.subjects = this.courses[this.courses.map(course => { return course._id; }).indexOf(value)].Subjects;
+            }));
 
-        // Check for changes in the "inputStudents" and update the suggestions
-        this.filteredStudents = this.classForm.get('inputStudents').valueChanges.pipe(
-            startWith(null as boolean),
-            map((inputText: string | null) => inputText ? this._filter(inputText) : this.allStudents.slice())
-        );
+            // If Class Id is in the URL then is UPDATE and we need to populate the form
+            if (this.activatedRoute.snapshot.paramMap.get('_id_class')) {
+                this.subscriptions.push(
+                    this.classService.getClass(+this.activatedRoute.snapshot.paramMap.get('_id_class')).subscribe(classs => {
+                        this._id_classUpdate = classs._id;
+                        this.classForm.get('inputCourse').setValue(classs.Subject._id_course);
+                        this.classForm.get('inputSubject').setValue(classs._id_subject);
+                        this.classForm.get('inputYear').setValue(classs._id_year);
+                        this.classForm.get('inputFrequencyRegime').setValue(classs._id_frequency_regime);
+                        this.classForm.get('inputLectiveYear').setValue(classs.lective_year);
+                        classs.Students.forEach(student => {
+                            // Add Students to the form
+                            this.signedStudents.push(student);
+
+                            // Remove the Students from the "allStudents" so that they doesn't appear in the search
+                            this.allStudents.splice(this.allStudents.map(allStudent => {
+                                return allStudent._id;
+                            }).indexOf(student._id), 1);
+                        });
+                        // Update the list by forcing a "valueChanges" event to execute "_filter"
+                        this.classForm.get('inputStudents').setValue(null);
+                    })
+                );
+            }
+        }));
 
         this.subscriptions.push(
             this.classForm.valueChanges.subscribe(() => {
@@ -97,14 +141,31 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // Push signed Students into "StudentsInClass" in order to send them to the API
-        const studentsInClass: StudentPerClass[] = [];
-        this.signedStudents.forEach(student => studentsInClass.push(new StudentPerClass(student._id)));
-
-        this.classService.createClass(new Class(this.authenticationService.userValue.response.data.user._id,
-            this.classForm.get('inputCourse').value, this.classForm.get('inputSubject').value, this.classForm.get('inputYear').value,
-            this.classForm.get('inputFrequencyRegime').value, this.classForm.get('inputLectiveYear').value, studentsInClass)).subscribe(
-            () => this.error = false, () => this.error = true);
+        if (!this.activatedRoute.snapshot.paramMap.get('_id_class')) {
+            // If is CREATE new Class
+            this.subscriptions.push(
+                this.classService.createClass(new Class(this.authenticationService.userValue.response.data.teacher._id,
+                    this.classForm.get('inputSubject').value, this.classForm.get('inputYear').value,
+                    this.classForm.get('inputFrequencyRegime').value, this.classForm.get('inputLectiveYear').value,
+                    this.signedStudents)).subscribe(() => {
+                        this.error = false;
+                        this.router.navigate(['/class/list']).then();
+                    }, () => this.error = true
+                )
+            );
+        } else {
+            // If is UPDATE Class
+            this.subscriptions.push(
+                this.classService.updateClass(new Class(this.authenticationService.userValue.response.data.teacher._id,
+                    this.classForm.get('inputSubject').value, this.classForm.get('inputYear').value,
+                    this.classForm.get('inputFrequencyRegime').value, this.classForm.get('inputLectiveYear').value,
+                    this.signedStudents, this._id_classUpdate)).subscribe(() => {
+                        this.error = false;
+                        this.router.navigate(['/class/list']).then();
+                    }, () => this.error = true
+                )
+            );
+        }
     }
 
     /**
@@ -178,7 +239,8 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     _filter(value: string): Student[] {
         try {
             const filterValue = value.toLowerCase();
-            return this.allStudents.filter(student => (student.code + student.name.toLowerCase()).includes(filterValue));
+            return this.allStudents.filter(student => (student.code + student.firstName.toLowerCase() + ' ' +
+                student.lastName.toLowerCase()).includes(filterValue));
         } catch (e: unknown) {
             // Ignore this error, it only occurs when a Student is signed to a Class because the value received in "value" argument is a
             // Student object and the error occurs when trying to do ".toLowerCase" on the object. When doing normal search there are no

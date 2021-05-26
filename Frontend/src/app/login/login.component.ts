@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../_services/authentication.service';
 import {first} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
+import {sha512} from 'js-sha512';
 
 @Component({
     selector: 'app-login',
@@ -62,7 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
 
         this.subscriptions.push(
-            this.authenticationService.login(this.loginForm.controls.inputEmail.value, this.loginForm.controls.inputPassword.value)
+            this.authenticationService.login(this.loginForm.controls.inputEmail.value, sha512(this.loginForm.controls.inputPassword.value))
                 .pipe(first()).subscribe(() => { this.router.navigate([this.returnUrl]); }, () => { this.error = true; })
         );
     }

@@ -3,7 +3,7 @@ import {ROUTES} from '../sidebar/sidebar.component';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {User} from '../../_models/user';
+import {Teacher} from '../../_models/teacher';
 import {Subscription} from 'rxjs/Subscription';
 
 @Component({
@@ -20,7 +20,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     listTitles: any[];
     toggleButton: any;
     sidebarVisible: boolean;
-    logedUser: User;
+    loggedTeacher: Teacher;
 
     constructor(private location: Location, private element: ElementRef, private router: Router,
                 private authenticationService: AuthenticationService) {
@@ -42,7 +42,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
                 }
             })
         );
-        this.logedUser = this.authenticationService.userValue.response.data.user;
+        this.loggedTeacher = this.authenticationService.userValue.response.data.teacher;
     }
 
     ngOnDestroy() {
@@ -139,7 +139,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
         }
 
         for (let item = 0; item < this.listTitles.length; item++) {
-            if (this.listTitles[item].path === title) {
+            /*if (this.listTitles[item].path === title) {
+                return this.listTitles[item].title;
+            }*/
+            if (title.includes(this.listTitles[item].path)) {
                 return this.listTitles[item].title;
             }
         }

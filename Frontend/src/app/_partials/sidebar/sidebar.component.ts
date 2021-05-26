@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../_services/authentication.service';
-import {User} from '../../_models/user';
+import {Teacher} from '../../_models/teacher';
 
 declare const $: any;
 
@@ -14,11 +14,12 @@ declare interface RouteInfo {
 export const ROUTES: RouteInfo[] = [
     {path: '/dashboard', title: 'Dashboard', icon: 'dashboard', class: ''},
     {path: '/class/list', title: 'Classes', icon: 'group', class: ''},
+    {path: '/class/create', title: 'Create Class', icon: '', class: 'hidden'},
+    {path: '/class/edit', title: 'Edit Class', icon: '', class: 'hidden'},
 
     {path: '/user-profile', title: 'User Profile', icon: 'person', class: ''},
     {path: '/table-list', title: 'Table List', icon: 'content_paste', class: ''},
     {path: '/typography', title: 'Typography', icon: 'library_books', class: ''},
-    {path: '/icons', title: 'Icons', icon: 'bubble_chart', class: ''},
     {path: '/notifications', title: 'Notifications', icon: 'notifications', class: ''},
 ];
 
@@ -29,13 +30,13 @@ export const ROUTES: RouteInfo[] = [
 })
 export class SidebarComponent implements OnInit {
     menuItems: RouteInfo[];
-    logedUser: User;
+    logedUser: Teacher;
 
     constructor(private authenticationService: AuthenticationService) { }
 
     ngOnInit() {
         this.menuItems = ROUTES.filter(menuItem => menuItem);
-        this.logedUser = this.authenticationService.userValue.response.data.user;
+        this.logedUser = this.authenticationService.userValue.response.data.teacher;
     }
 
     logout() {

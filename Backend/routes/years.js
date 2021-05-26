@@ -2,17 +2,15 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require('../db');
 
-// GET Courses
+// GET all Years
 router.get('/', function (req, res, next) {
     async function run() {
-        const courses = await sequelize.models.Course.findAll({
-            include: {all: true, nested: true},
-        });
+        const years = await sequelize.models.Year.findAll();
 
         res.status(200).send({
             response: {
-                message: 'Courses sent with success!',
-                data: courses
+                message: 'Years sent with success!',
+                data: years
             }
         });
     }
