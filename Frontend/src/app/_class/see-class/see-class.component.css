@@ -1,0 +1,19 @@
+.mat-input-element:disabled, .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after {
+    color: unset;
+}
+
+.notes {
+    display: flex;
+    align-items: center;
+}
+
+.notes p {
+    font-size: smaller;
+    margin-bottom: unset;
+    margin-right: 15px;
+}
+
+.note {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}

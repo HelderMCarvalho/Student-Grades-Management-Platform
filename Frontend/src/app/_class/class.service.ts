@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
+import {Note} from '../_models/note';
 
 @Injectable({
     providedIn: 'root'
@@ -37,9 +38,9 @@ export class ClassService {
      * POST Class.
      * @param classs Class to create
      */
-    createClass(classs: Class): Observable<Response<null>> {
+    createClass(classs: Class): Observable<null> {
         return this.http.post<Response<null>>(`${environment.apiUrl}/classes`, classs).pipe(map(response => {
-            return response;
+            return response.response.data;
         }));
     }
 
@@ -47,9 +48,9 @@ export class ClassService {
      * UPDATE Class.
      * @param classs Class to update
      */
-    updateClass(classs: Class): Observable<Response<null>> {
+    updateClass(classs: Class): Observable<null> {
         return this.http.put<Response<null>>(`${environment.apiUrl}/classes`, classs).pipe(map(response => {
-            return response;
+            return response.response.data;
         }));
     }
 
@@ -57,9 +58,43 @@ export class ClassService {
      * DELETE Class.
      * @param _id Id of the Class to delete
      */
-    deleteClass(_id: number): Observable<Response<null>> {
+    deleteClass(_id: number): Observable<null> {
         return this.http.delete<Response<null>>(`${environment.apiUrl}/classes/${_id}`).pipe(map((response) => {
-            return response;
+            return response.response.data;
+        }));
+    }
+
+    /**
+     * POST Class Note.
+     * @param classs Class to create note for
+     * @param note Note to create (only has content)
+     */
+    createClassNote(classs: Class, note: Note): Observable<Note> {
+        return this.http.post<Response<Note>>(`${environment.apiUrl}/classes/${classs._id}/note`, note).pipe(map(response => {
+                return response.response.data;
+            })
+        );
+    }
+
+    /**
+     * UPDATE Class Note.
+     * @param note Original note to update
+     * @param updatedNote Updated note (only has content)
+     */
+    updateClassNote(note: Note, updatedNote: Note): Observable<Note> {
+        return this.http.put<Response<Note>>(`${environment.apiUrl}/classes/note/${note._id}`, updatedNote).pipe(map(response => {
+                return response.response.data;
+            })
+        );
+    }
+
+    /**
+     * DELETE Note.
+     * @param _id Id of the Note to delete
+     */
+    deleteNote(_id: number): Observable<null> {
+        return this.http.delete<Response<null>>(`${environment.apiUrl}/classes/note/${_id}`).pipe(map((response) => {
+            return response.response.data;
         }));
     }
 }

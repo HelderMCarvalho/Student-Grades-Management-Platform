@@ -57,6 +57,10 @@
                                 <ng-container matColumnDef="options">
                                     <th *matHeaderCellDef mat-header-cell mat-sort-header>Options</th>
                                     <td *matCellDef="let row" mat-cell>
+                                        <a class="btn btn-info btn-just-icon" mat-raised-button
+                                           routerLink="/class/see/{{row._id}}">
+                                            <span class="material-icons">info</span>
+                                        </a>
                                         <a class="btn btn-warning btn-just-icon" mat-raised-button
                                            routerLink="/class/edit/{{row._id}}">
                                             <span class="material-icons">edit</span>

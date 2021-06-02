@@ -18,7 +18,7 @@ export class Class {
     FrequencyRegime: FrequencyRegime;
     Year: Year;
     Criteria: Criteria[];
-    Notes: Note[];
+    Notes: Note[] = [];
     Students: Student[];
 
     /**
@@ -31,8 +31,8 @@ export class Class {
      * @param students Students in the Class
      * @param _id Id of the Class
      */
-    constructor(_id_teacher: number, _id_subject: number, _id_year: number, _id_frequency_regime: number,
-                lective_year: string, students?: Student[], _id?: number) {
+    constructor(_id_teacher?: number, _id_subject?: number, _id_year?: number, _id_frequency_regime?: number,
+                lective_year?: string, students?: Student[], _id?: number) {
         this._id = _id;
         this._id_teacher = _id_teacher;
         this._id_subject = _id_subject;

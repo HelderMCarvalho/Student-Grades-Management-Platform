@@ -1,0 +1,86 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form [formGroup]="classForm">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Course</mat-label>
+                                        <label for="inputCourse"></label>
+                                        <input formControlName="inputCourse" id="inputCourse" matInput type="text">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Subject</mat-label>
+                                        <label for="inputSubject"></label>
+                                        <input formControlName="inputSubject" id="inputSubject" matInput type="text">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Year</mat-label>
+                                        <label for="inputYear"></label>
+                                        <input formControlName="inputYear" id="inputYear" matInput type="text">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Frequency Regime</mat-label>
+                                        <label for="inputFrequencyRegime"></label>
+                                        <input formControlName="inputFrequencyRegime" id="inputFrequencyRegime" matInput
+                                               type="text">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Lective Year</mat-label>
+                                        <label for="inputLectiveYear"></label>
+                                        <input formControlName="inputLectiveYear" id="inputLectiveYear" matInput
+                                               type="text">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="notes">
+                                    <p>Notes</p>
+                                    <a (click)="openDialog(classs, 'new_note_class')" class="btn btn-just-icon btn-sm"
+                                       mat-raised-button>
+                                        <span class="material-icons">add</span>
+                                    </a>
+                                </div>
+                                <p *ngIf="classs.Notes.length == 0">There are no notes!</p>
+                                <div *ngIf="classs.Notes.length > 0" class="row">
+                                    <div *ngFor="let note of classs.Notes" class="col-sm-12 col-md-4">
+                                        <div class="card note">
+                                            <div class="card-body">
+                                                {{note.content}}
+                                                <div>
+                                                    <a (click)="deleteNote(note._id)"
+                                                       class="btn btn-danger btn-just-icon btn-sm pull-right"
+                                                       mat-raised-button>
+                                                        <span class="material-icons">delete</span>
+                                                    </a>
+                                                    <a (click)="openDialog(note, 'update_note')"
+                                                       class="btn btn-warning btn-just-icon btn-sm pull-right"
+                                                       mat-raised-button>
+                                                        <span class="material-icons">edit</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

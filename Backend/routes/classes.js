@@ -70,18 +70,14 @@ router.post('/', function (req, res, next) {
             // If Class was created
             res.status(200).send({
                 response: {
-                    data: {
-                        message: 'Class created with success!'
-                    }
+                    message: 'Class created with success!'
                 }
             });
         } else {
             // If class wasn't created
             res.status(400).send({
                 response: {
-                    data: {
-                        message: 'Class not created with success!'
-                    }
+                    message: 'Class not created with success!'
                 }
             });
         }
@@ -125,18 +121,14 @@ router.put('/', function (req, res, next) {
             // If the Class was updated
             res.status(200).send({
                 response: {
-                    data: {
-                        message: 'Class updated with success!'
-                    }
+                    message: 'Class updated with success!'
                 }
             });
         }).catch(() => {
             // If the Class wasn't updated
             res.status(400).send({
                 response: {
-                    data: {
-                        message: 'Class not updated with success!'
-                    }
+                    message: 'Class not updated with success!'
                 }
             });
         });
@@ -156,9 +148,7 @@ router.delete('/:_id', function (req, res, next) {
             // If Class was deleted
             res.status(200).send({
                 response: {
-                    data: {
-                        message: 'Class deleted with success!'
-                    }
+                    message: 'Class deleted with success!'
                 }
             });
         }).catch(() => {
@@ -171,7 +161,107 @@ router.delete('/:_id', function (req, res, next) {
                 }
             });
         })
+    }
 
+    run().then();
+});
+
+// POST new Class Note
+router.post('/:_id/note', function (req, res, next) {
+    async function run() {
+        // Find Class
+        const classs = await sequelize.models.Class.findOne({
+            where: {
+                _id: req.params._id
+            },
+            include: {all: true, nested: true},
+        });
+
+        // If there are Students to associate to the Class
+        if (classs) {
+            const note = await sequelize.models.Note.create(req.body);
+            classs.addNote(note).then(() => {
+                // If Note was created and added to the Class
+                res.status(200).send({
+                    response: {
+                        message: 'Note created and added with success!',
+                        data: note
+                    }
+                });
+            }).catch(() => {
+                // If Note wasn't created and added to Class
+                res.status(400).send({
+                    response: {
+                        message: 'Note not created and not added with success!'
+                    }
+                });
+            });
+        }
+    }
+
+    run().then();
+});
+
+// PUT Class Note
+router.put('/note/:_id', function (req, res, next) {
+    async function run() {
+        // Update Note
+        sequelize.models.Note.update(req.body, {
+            where: {
+                _id: req.params._id
+            }
+        }).then(async () => {
+            // Get the Updated Note
+            const updatedNote = await sequelize.models.Note.findOne({
+                where: {
+                    _id: req.params._id
+                }
+            });
+
+            // If Note was updated
+            res.status(200).send({
+                response: {
+                    message: 'Note updated with success!',
+                    data: updatedNote
+                }
+            });
+        }).catch(() => {
+            // If Note wasn't updated
+            res.status(400).send({
+                response: {
+                    message: 'Note not updated with success!'
+                }
+            });
+        });
+    }
+
+    run().then();
+});
+
+// DELETE Class Note
+router.delete('/note/:_id', function (req, res, next) {
+    async function run() {
+        sequelize.models.Note.destroy({
+            where: {
+                _id: req.params._id
+            }
+        }).then(() => {
+            // If Class Note was deleted
+            res.status(200).send({
+                response: {
+                    message: 'Class Note deleted with success!'
+                }
+            });
+        }).catch(() => {
+            // If Class Note wasn't deleted
+            res.status(400).send({
+                response: {
+                    data: {
+                        message: 'Class Note not deleted with success!'
+                    }
+                }
+            });
+        })
     }
 
     run().then();

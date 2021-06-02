@@ -96,7 +96,7 @@ sequelize.authenticate().then(() => {
             }, {
                 firstName: 'Eduardo',
                 lastName: 'Oliveira',
-                code: 12345
+                code: 15475
             }]);
             await Year.bulkCreate([{
                 name: '1st'

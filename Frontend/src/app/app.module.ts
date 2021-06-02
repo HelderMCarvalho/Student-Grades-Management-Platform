@@ -25,6 +25,9 @@ import {ListClassesComponent} from './_class/list-classes/list-classes.component
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {SeeClassComponent} from './_class/see-class/see-class.component';
+import {DialogCreateEditNoteComponent} from './_class/dialog-create-edit-note/dialog-create-edit-note.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
     imports: [
@@ -44,7 +47,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
         MatIconModule,
         MatTableModule,
         MatSortModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatDialogModule
     ],
     declarations: [
         AppComponent,
@@ -53,6 +57,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
         RegisterComponent,
         CreateEditClassComponent,
         ListClassesComponent,
+        SeeClassComponent,
+        DialogCreateEditNoteComponent,
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

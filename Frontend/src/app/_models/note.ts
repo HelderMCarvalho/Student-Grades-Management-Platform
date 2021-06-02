@@ -5,4 +5,8 @@ export class Note {
     content: string;
     Classes: Class[];
     Student_Classes: [];
+
+    constructor(content: string) {
+        this.content = content;
+    }
 }

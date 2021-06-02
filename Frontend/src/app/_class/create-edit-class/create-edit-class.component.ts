@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ValidationService} from '../../validation.service';
 import {SgmService} from '../../_services/sgm.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Observable} from 'rxjs';
@@ -45,9 +44,8 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     filteredStudents: Observable<Student[]>;
     @ViewChild('inputStudents') inputStudentsChild: ElementRef<HTMLInputElement>;
 
-    constructor(private validationService: ValidationService, private formBuilder: FormBuilder, private sgmService: SgmService,
-                private classService: ClassService, private authenticationService: AuthenticationService, private router: Router,
-                public activatedRoute: ActivatedRoute) { }
+    constructor(private formBuilder: FormBuilder, private sgmService: SgmService, private classService: ClassService,
+                private authenticationService: AuthenticationService, private router: Router, public activatedRoute: ActivatedRoute) { }
 
     ngOnInit(): void {
         this.classForm = this.formBuilder.group({

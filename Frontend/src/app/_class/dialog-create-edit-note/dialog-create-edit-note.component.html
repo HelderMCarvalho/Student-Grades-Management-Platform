@@ -1,0 +1,20 @@
+<div mat-dialog-content>
+    <div class="row">
+        <div class="col-12">
+            <mat-form-field>
+                <mat-label>Note</mat-label>
+                <label for="inputNote"></label>
+                <textarea [(ngModel)]="newNote" [value]="data ? data.content : ''" id="inputNote" matInput rows="10">
+                </textarea>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <div class="row">
+        <div class="col-12">
+            <button [mat-dialog-close]="newNote" class="btn btn-success pull-right" mat-raised-button>Save</button>
+            <button (click)="onNoClick()" class="btn btn-danger pull-right" mat-raised-button>Cancel</button>
+        </div>
+    </div>
+</div>
