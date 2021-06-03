@@ -61,7 +61,7 @@
                                             <div class="card-body">
                                                 {{note.content}}
                                                 <div>
-                                                    <a (click)="deleteNote(note._id)"
+                                                    <a (click)="deleteNote(note)"
                                                        class="btn btn-danger btn-just-icon btn-sm pull-right"
                                                        mat-raised-button>
                                                         <span class="material-icons">delete</span>
@@ -76,6 +76,47 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="notes">
+                                    <p>Students</p>
+                                </div>
+                                <p *ngIf="classs.Students.length === 0">There are no Students!</p>
+                                <ng-container *ngIf="classs.Students.length > 0">
+                                    <ng-container *ngFor="let student of classs.Students">
+                                        <div class="student-name-note">
+                                            <p>({{student.code}}) {{student.firstName}} {{student.lastName}}</p>
+                                            <a (click)="openDialog(classs, 'new_note_class_student', student)"
+                                               class="btn btn-just-icon btn-sm"
+                                               mat-raised-button>
+                                                <span class="material-icons">add</span>
+                                            </a>
+                                        </div>
+                                        <div *ngIf="student.Student_Class.Notes.length > 0" class="row">
+                                            <div *ngFor="let note of student.Student_Class.Notes"
+                                                 class="col-sm-12 col-md-4">
+                                                <div class="card note">
+                                                    <div class="card-body">
+                                                        {{note.content}}
+                                                        <div>
+                                                            <a (click)="deleteNote(note, student)"
+                                                               class="btn btn-danger btn-just-icon btn-sm pull-right"
+                                                               mat-raised-button>
+                                                                <span class="material-icons">delete</span>
+                                                            </a>
+                                                            <a (click)="openDialog(note, 'update_note', student)"
+                                                               class="btn btn-warning btn-just-icon btn-sm pull-right"
+                                                               mat-raised-button>
+                                                                <span class="material-icons">edit</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </ng-container>
+                                </ng-container>
                             </div>
                         </div>
                     </div>

@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DialogCreateEditNoteComponent} from '../dialog-create-edit-note/dialog-create-edit-note.component';
 import {Note} from '../../_models/note';
 import {Clipboard} from '@angular/cdk/clipboard';
+import {Student} from '../../_models/student';
 
 @Component({
     selector: 'app-see-class',
@@ -54,22 +55,28 @@ export class SeeClassComponent implements OnInit, OnDestroy {
     /**
      * Open Note modal/dialog to create or update note
      * @param data Class (to add Note) or Note (to update Note)
-     * @param type Operation to execute (new_note_class -> Create new Note in Class | update_note -> Update note)
+     * @param type Operation to execute
+     *             - new_note_class -> Create Note in Class
+     *             - update_note -> Update note
+     *             - new_note_class_student -> Create Note for Student in Class
+     * @param student Student to add Note (only used when adding a Student Note in a Specific Class)
      */
-    openDialog(data: Class | Note, type: string): void {
+    openDialog(data: Class | Note, type: string, student?: Student): void {
         switch (type) {
             case 'new_note_class': {
                 this.subscriptions.push(
                     this.dialog.open(DialogCreateEditNoteComponent).afterClosed().subscribe(result => {
-                        this.subscriptions.push(
-                            this.classService.createClassNote(data as Class, new Note(result)).subscribe(note => {
-                                this.classs.Notes.push(note);
-                            }, () => {
-                                this.clipboard.copy(result);
-                                alert('Note not created and not added with success!\nDon\'t worry, your Note is not lost, we copied it ' +
-                                    'to your clipboard.\nBe happy and paste it wherever you want!');
-                            })
-                        );
+                        if (result) {
+                            this.subscriptions.push(
+                                this.classService.createClassNote(data as Class, new Note(result)).subscribe(note => {
+                                    this.classs.Notes.push(note);
+                                }, () => {
+                                    this.clipboard.copy(result);
+                                    alert('Note not created with success!\nDon\'t worry, your Note is not lost, we copied it ' +
+                                        'to your clipboard.\nBe happy and paste it wherever you want!');
+                                })
+                            );
+                        }
                     })
                 );
                 break;
@@ -77,15 +84,40 @@ export class SeeClassComponent implements OnInit, OnDestroy {
             case 'update_note': {
                 this.subscriptions.push(
                     this.dialog.open(DialogCreateEditNoteComponent, {data: data}).afterClosed().subscribe(result => {
-                        this.subscriptions.push(
-                            this.classService.updateClassNote(data as Note, new Note(result)).subscribe(note => {
-                                this.classs.Notes.find(classNote => classNote._id === note._id).content = note.content;
-                            }, () => {
-                                this.clipboard.copy(result);
-                                alert('Note not updated with success!\nDon\'t worry, your Note is not lost, we copied it to your ' +
-                                    'clipboard.\nBe happy and paste it wherever you want!');
-                            })
-                        );
+                        if (result) {
+                            this.subscriptions.push(
+                                this.classService.updateClassNote(data as Note, new Note(result)).subscribe(note => {
+                                    if (student) {
+                                        this.classs.Students[this.classs.Students.indexOf(student)].Student_Class.Notes.find(
+                                            studentClassNote => studentClassNote._id === note._id).content = note.content;
+                                    } else {
+                                        this.classs.Notes.find(classNote => classNote._id === note._id).content = note.content;
+                                    }
+                                }, () => {
+                                    this.clipboard.copy(result);
+                                    alert('Note not updated with success!\nDon\'t worry, your Note is not lost, we copied it to your ' +
+                                        'clipboard.\nBe happy and paste it wherever you want!');
+                                })
+                            );
+                        }
+                    })
+                );
+                break;
+            }
+            case 'new_note_class_student': {
+                this.subscriptions.push(
+                    this.dialog.open(DialogCreateEditNoteComponent).afterClosed().subscribe(result => {
+                        if (result) {
+                            this.subscriptions.push(
+                                this.classService.createStudentClassNote(data as Class, student, new Note(result)).subscribe(note => {
+                                    this.classs.Students[this.classs.Students.indexOf(student)].Student_Class.Notes.push(note);
+                                }, () => {
+                                    this.clipboard.copy(result);
+                                    alert('Note not created with success!\nDon\'t worry, your Note is not lost, we copied it to your ' +
+                                        'clipboard.\nBe happy and paste it wherever you want!');
+                                })
+                            );
+                        }
                     })
                 );
                 break;
@@ -95,12 +127,19 @@ export class SeeClassComponent implements OnInit, OnDestroy {
 
     /**
      * Deletes a Note
-     * @param _id Id of the Note to delete
+     * @param note Note to delete
+     * @param student Student to which the Note belongs
      */
-    deleteNote(_id: number) {
+    deleteNote(note: Note, student?: Student) {
         this.subscriptions.push(
-            this.classService.deleteNote(_id).subscribe(() => {
-                this.classs.Notes.splice(this.classs.Notes.indexOf(this.classs.Notes.find(note => note._id === _id)), 1);
+            this.classService.deleteNote(note._id).subscribe(() => {
+                if (student) {
+                    this.classs.Students[this.classs.Students.indexOf(student)].Student_Class.Notes.splice(
+                        this.classs.Students[this.classs.Students.indexOf(student)].Student_Class.Notes.indexOf(note), 1
+                    );
+                } else {
+                    this.classs.Notes.splice(this.classs.Notes.indexOf(note), 1);
+                }
             }, () => alert('Error deleting the Note!'))
         );
     }

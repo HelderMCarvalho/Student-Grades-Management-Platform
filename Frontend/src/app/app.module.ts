@@ -28,6 +28,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {SeeClassComponent} from './_class/see-class/see-class.component';
 import {DialogCreateEditNoteComponent} from './_class/dialog-create-edit-note/dialog-create-edit-note.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatTableModule,
         MatSortModule,
         MatPaginatorModule,
-        MatDialogModule
+        MatDialogModule,
+        MatDividerModule
     ],
     declarations: [
         AppComponent,

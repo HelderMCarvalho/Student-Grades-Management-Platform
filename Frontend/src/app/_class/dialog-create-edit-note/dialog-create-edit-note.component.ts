@@ -17,7 +17,8 @@ export class DialogCreateEditNoteComponent {
         }
     }
 
-    onNoClick() {
+    onCancelClick() {
+        this.newNote = null;
         this.dialogRef.close();
     }
 }

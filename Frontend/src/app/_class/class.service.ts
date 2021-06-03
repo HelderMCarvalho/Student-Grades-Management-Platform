@@ -6,6 +6,7 @@ import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Note} from '../_models/note';
+import {Student} from '../_models/student';
 
 @Injectable({
     providedIn: 'root'
@@ -96,5 +97,19 @@ export class ClassService {
         return this.http.delete<Response<null>>(`${environment.apiUrl}/classes/note/${_id}`).pipe(map((response) => {
             return response.response.data;
         }));
+    }
+
+    /**
+     * POST Student Class Note.
+     * @param classs Class to create note for
+     * @param student Student to associate the Note to
+     * @param note Note to create (only has content)
+     */
+    createStudentClassNote(classs: Class, student: Student, note: Note): Observable<Note> {
+        return this.http.post<Response<Note>>(`${environment.apiUrl}/classes/${classs._id}/note/student/${student._id}`, note).pipe(
+            map(response => {
+                return response.response.data;
+            })
+        );
     }
 }

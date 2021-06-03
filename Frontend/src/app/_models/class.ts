@@ -19,7 +19,7 @@ export class Class {
     Year: Year;
     Criteria: Criteria[];
     Notes: Note[] = [];
-    Students: Student[];
+    Students: Student[] = [];
 
     /**
      * Create a Class.
@@ -39,6 +39,8 @@ export class Class {
         this._id_year = _id_year;
         this._id_frequency_regime = _id_frequency_regime;
         this.lective_year = lective_year;
-        this.Students = students;
+        if (students) {
+            this.Students = students;
+        }
     }
 }

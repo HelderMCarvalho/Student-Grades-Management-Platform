@@ -1,8 +1,4 @@
-.mat-input-element:disabled, .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after {
-    color: unset;
-}
-
-.notes {
+.notes, .student-name-note {
     display: flex;
     align-items: center;
 }
@@ -16,4 +12,8 @@
 .note {
     margin-top: 15px;
     margin-bottom: 15px;
+}
+
+.student-name-note p {
+    margin: 0 15px 0 0;
 }
