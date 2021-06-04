@@ -104,14 +104,19 @@ router.post('/', function (req, res, next) {
 
         // If there are Students to associate to the Class
         if (req.body.Students.length > 0) {
-            req.body.Students?.forEach(student => {
+            req.body.Students.forEach(student => {
                 sequelize.models.Student.findOne({
                     where: {
                         _id: student._id
                     }
-                }).then(s => {
-                    classs.addStudent(s);
-                });
+                }).then(student => classs.addStudent(student));
+            });
+        }
+
+        // If there are Criterion to associate to the Class
+        if (req.body.Criteria.length > 0) {
+            req.body.Criteria.forEach(criteria => {
+                sequelize.models.Criteria.create(criteria).then(criteria => classs.addCriteria(criteria))
             });
         }
 
@@ -144,7 +149,7 @@ router.put('/', function (req, res, next) {
                 _id: req.body._id
             }
         }).then(async () => {
-            // Get the Update Class to add or remove Students in Class
+            // Get the Updated Class to add or remove Students in Class
             const classsUpdated = await sequelize.models.Class.findOne({
                 where: {
                     _id: req.body._id
@@ -152,6 +157,7 @@ router.put('/', function (req, res, next) {
                 include: {all: true, nested: true},
             });
 
+            // ---------- Process Students ----------
             // Process the received Students and associate the new ones to the Class
             for (const student of req.body.Students) {
                 // Add every received Student (if we try to add a Student that is already in the Class then, that
@@ -163,9 +169,30 @@ router.put('/', function (req, res, next) {
                 if (!req.body.Students.find(stubentInBody => stubentInBody._id === student._id)) {
                     // If the Student is associated but not in the received Students, then remove the Student from the
                     // Class
-                    classsUpdated.removeStudent(student);
+                    student.removeNotes().then(() => classsUpdated.removeStudent(student));
                 }
             });
+            // ---------- END Process Students ----------
+
+            // ---------- Process Criterion ----------
+            // Process the received Criterion and associate the new ones to the Class
+            for (const criteria of req.body.Criteria) {
+                // If Criteria doesn't have Id, then it is a new Criteria
+                if (!criteria._id) {
+                    sequelize.models.Criteria.create(criteria).then(criteria => classsUpdated.addCriteria(criteria));
+                }
+            }
+
+            classsUpdated.Criteria.forEach(criteria => {
+                if (!req.body.Criteria.find(criteriaInBody => criteriaInBody._id === criteria._id)) {
+                    // If the Criteria is associated but not in the received Criterion, then remove the Criteria from
+                    // the Class
+                    classsUpdated.removeCriteria(criteria).then(() =>
+                        sequelize.models.Criteria.destroy({where: {_id: criteria._id}})
+                    );
+                }
+            });
+            // ---------- END Process Criterion ----------
 
             // If the Class was updated
             res.status(200).send({
@@ -189,16 +216,57 @@ router.put('/', function (req, res, next) {
 // DELETE Class
 router.delete('/:_id', function (req, res, next) {
     async function run() {
-        sequelize.models.Class.destroy({
+        // Find Class
+        sequelize.models.Class.findOne({
             where: {
                 _id: req.params._id
+            },
+            include: {all: true, nested: true}
+        }).then(async classs => {
+            // Delete Class Notes
+            classs.Notes.forEach(classNote => {
+                sequelize.models.Note.destroy({
+                    where: {
+                        _id: classNote._id
+                    }
+                });
+            });
+
+            // Get the "Notes per Student per Class" and delete them
+            for (const student of classs.Students) {
+                student.Student_Class = await sequelize.models.Student_Class.findOne({
+                    where: {
+                        _id_class: req.params._id,
+                        _id_student: student._id
+                    },
+                    include: {all: true, nested: true}
+                });
+                student.Student_Class.Notes.forEach(studentClassNote=>{
+                    sequelize.models.Note.destroy({
+                        where: {
+                            _id: studentClassNote._id
+                        }
+                    });
+                });
             }
-        }).then(() => {
-            // If Class was deleted
-            res.status(200).send({
-                response: {
-                    message: 'Class deleted with success!'
-                }
+
+            // Delete Class
+            sequelize.models.Class.destroy({where: {_id: classs._id}}).then(() => {
+                // If Class was deleted
+                res.status(200).send({
+                    response: {
+                        message: 'Class deleted with success!'
+                    }
+                });
+            }).catch(() => {
+                // If Class wasn't deleted
+                res.status(400).send({
+                    response: {
+                        data: {
+                            message: 'Class not deleted with success!'
+                        }
+                    }
+                });
             });
         }).catch(() => {
             // If Class wasn't deleted
@@ -209,7 +277,7 @@ router.delete('/:_id', function (req, res, next) {
                     }
                 }
             });
-        })
+        });
     }
 
     run().then();

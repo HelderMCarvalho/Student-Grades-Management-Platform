@@ -64,6 +64,44 @@
                                             [control]="classForm.get('inputLectiveYear')"></app-control-messages>
                                 </div>
                                 <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <mat-form-field appearance="standard">
+                                                <mat-label>Criteria Name</mat-label>
+                                                <label for="inputCriteriaName"></label>
+                                                <input formControlName="inputCriteriaName" id="inputCriteriaName"
+                                                       matInput type="text">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-5">
+                                            <mat-form-field appearance="standard">
+                                                <mat-label>Criteria Percentage</mat-label>
+                                                <label for="inputCriteriaPercentage"></label>
+                                                <input formControlName="inputCriteriaPercentage"
+                                                       id="inputCriteriaPercentage"
+                                                       matInput type="number">
+                                            </mat-form-field>
+                                            <app-control-messages
+                                                    [control]="classForm.get('inputCriteriaPercentage')"></app-control-messages>
+                                        </div>
+                                        <div class="col-2 btn-add-criteria">
+                                            <button (click)="addCriteria()" class="btn btn-success" mat-raised-button
+                                                    type="button">Add Criteria
+                                            </button>
+                                        </div>
+                                        <ng-container *ngIf="criteria.length > 0">
+                                            <div *ngFor="let criteria of criteria" class="col-12">
+                                                {{criteria.name}}: {{criteria.percentage}}%
+                                                <a (click)="deleteCriteria(criteria)"
+                                                   class="btn btn-danger btn-just-icon btn-sm delete-criteria"
+                                                   mat-raised-button>
+                                                    <span class="material-icons">delete</span>
+                                                </a>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="col-12">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Students</mat-label>
                                         <mat-chip-list #chipStudents>
@@ -89,7 +127,10 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <p *ngIf="error" class="invalid-feedback">Error creating Class!</p>
+                                    <p *ngIf="error && !activatedRoute.snapshot.paramMap.get('_id_class')"
+                                       class="invalid-feedback">Error creating Class!</p>
+                                    <p *ngIf="error && activatedRoute.snapshot.paramMap.get('_id_class')"
+                                       class="invalid-feedback">Error updating Class!</p>
                                     <button *ngIf="!activatedRoute.snapshot.paramMap.get('_id_class')"
                                             class="btn btn-success pull-right" mat-raised-button type="submit">Create
                                     </button>

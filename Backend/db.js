@@ -49,7 +49,7 @@ Class.belongsTo(FrequencyRegime, {foreignKey: '_id_frequency_regime'});
 Year.hasMany(Class, {foreignKey: '_id_year'});
 Class.belongsTo(Year, {foreignKey: '_id_year'});
 
-Class.hasMany(Criteria, {foreignKey: '_id_class'});
+Class.hasMany(Criteria, {foreignKey: '_id_class', onDelete: 'CASCADE'});
 Criteria.belongsTo(Class, {foreignKey: '_id_class'});
 
 Criteria.hasOne(EvaluationComponent, {foreignKey: '_id_criteria'});
@@ -58,14 +58,14 @@ EvaluationComponent.belongsTo(Criteria, {foreignKey: '_id_criteria'});
 Student.hasMany(EvaluationComponent, {foreignKey: '_id_student'});
 EvaluationComponent.belongsTo(Student, {foreignKey: '_id_student'});
 
-Note.belongsToMany(Class, {foreignKey: '_id_note', through: Class_Note});
-Class.belongsToMany(Note, {foreignKey: '_id_class', through: Class_Note});
+Class.belongsToMany(Note, {foreignKey: '_id_class', through: Class_Note, onDelete: 'CASCADE'});
+Note.belongsToMany(Class, {foreignKey: '_id_note', through: Class_Note, onDelete: 'CASCADE'});
 
 Student.belongsToMany(Class, {foreignKey: '_id_student', through: Student_Class});
 Class.belongsToMany(Student, {foreignKey: '_id_class', through: Student_Class});
 
-Student_Class.belongsToMany(Note, {foreignKey: '_id_student_class', through: Note_Student_Class});
-Note.belongsToMany(Student_Class, {foreignKey: '_id_note', through: Note_Student_Class});
+Student_Class.belongsToMany(Note, {foreignKey: '_id_student_class', through: Note_Student_Class, onDelete: 'CASCADE'});
+Note.belongsToMany(Student_Class, {foreignKey: '_id_note', through: Note_Student_Class, onDelete: 'CASCADE'});
 
 // END Relations
 
@@ -110,13 +110,13 @@ sequelize.authenticate().then(() => {
             }, {
                 name: 'Nighttime'
             }]);
-            /!*await Teacher.bulkCreate([{
-                email: 'teacherone@ipca.pt',
+            await Teacher.bulkCreate([{
+                email: 'test@test.com',
                 firstName: 'Teacher',
                 lastName: 'One',
                 code: 11111,
-                password: 'doesnt work'
-            }]);*!/
+                password: 'b3eebd72b43b377f8c814c6799723c89c2d134181a9bde7613e2f7c86916522232504510909adcd7be43e84d3b1c2d4c51985bdfc4804633330fc75816d03ff2'
+            }]);
             /!*await Class.create({
                 lective_year: '20/21',
                 _id_subject: 1,

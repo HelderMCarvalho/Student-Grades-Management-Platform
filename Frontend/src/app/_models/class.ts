@@ -29,10 +29,11 @@ export class Class {
      * @param _id_frequency_regime Frequency Regime of the Class ((1) Daytime or (2) Nighttime)
      * @param lective_year Lective year of the Course (20/21)
      * @param students Students in the Class
+     * @param criteria Evaluation Criterion of tha Class
      * @param _id Id of the Class
      */
     constructor(_id_teacher?: number, _id_subject?: number, _id_year?: number, _id_frequency_regime?: number,
-                lective_year?: string, students?: Student[], _id?: number) {
+                lective_year?: string, students?: Student[], criteria?: Criteria[], _id?: number) {
         this._id = _id;
         this._id_teacher = _id_teacher;
         this._id_subject = _id_subject;
@@ -41,6 +42,9 @@ export class Class {
         this.lective_year = lective_year;
         if (students) {
             this.Students = students;
+        }
+        if (criteria) {
+            this.Criteria = criteria;
         }
     }
 }

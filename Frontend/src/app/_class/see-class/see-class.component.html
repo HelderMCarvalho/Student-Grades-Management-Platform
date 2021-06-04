@@ -46,8 +46,19 @@
                             </div>
                         </form>
                         <div class="row">
-                            <div class="col-12">
-                                <div class="notes">
+                            <div class="col-12 class-info">
+                                <div class="class-info-title">
+                                    <p>Criterion</p>
+                                </div>
+                                <p *ngIf="classs.Criteria && classs.Criteria.length == 0">There are no Criterion!</p>
+                                <ng-container *ngIf="classs.Criteria && classs.Criteria.length > 0">
+                                    <div *ngFor="let criteria of classs.Criteria">
+                                        {{criteria.name}}: {{criteria.percentage}}%
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div class="col-12 class-info">
+                                <div class="class-info-title">
                                     <p>Notes</p>
                                     <a (click)="openDialog(classs, 'new_note_class')" class="btn btn-just-icon btn-sm"
                                        mat-raised-button>
@@ -77,8 +88,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="notes">
+                            <div class="col-12 class-info">
+                                <div class="class-info-title">
                                     <p>Students</p>
                                 </div>
                                 <p *ngIf="classs.Students.length === 0">There are no Students!</p>

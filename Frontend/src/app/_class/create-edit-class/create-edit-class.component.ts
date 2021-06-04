@@ -16,6 +16,7 @@ import {ClassService} from '../class.service';
 import {Year} from '../../_models/year';
 import {FrequencyRegime} from '../../_models/frequencyRegime';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Criteria} from '../../_models/criteria';
 
 @Component({
     selector: 'app-create-edit-class',
@@ -37,6 +38,7 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     signedStudents: Student[] = [];
     frequencyRegimes: FrequencyRegime[];
     years: Year[];
+    criteria: Criteria[] = [];
 
     selectable = true;
     removable = true;
@@ -55,6 +57,8 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
             inputFrequencyRegime: [null, Validators.required],
             inputLectiveYear: [null, Validators.required],
             inputStudents: [null],
+            inputCriteriaName: [null],
+            inputCriteriaPercentage: [null, [Validators.min(1), Validators.max(100)]],
         });
 
         // Get Years
@@ -108,6 +112,7 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
                                 return allStudent._id;
                             }).indexOf(student._id), 1);
                         });
+                        classs.Criteria.forEach(criteria => this.criteria.push(criteria));
                         // Update the list by forcing a "valueChanges" event to execute "_filter"
                         this.classForm.get('inputStudents').setValue(null);
                     })
@@ -130,6 +135,26 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Add Criteria to the Criteria Array
+     */
+    addCriteria() {
+        if (this.classForm.get('inputCriteriaName').value && this.classForm.get('inputCriteriaPercentage').value) {
+            this.criteria.push(new Criteria(this.classForm.get('inputCriteriaName').value,
+                this.classForm.get('inputCriteriaPercentage').value));
+            this.classForm.get('inputCriteriaName').setValue(null);
+            this.classForm.get('inputCriteriaPercentage').setValue(null);
+        }
+    }
+
+    /**
+     * Delete Criteria from the Criteria Array
+     * @param criteria Criteria to delete
+     */
+    deleteCriteria(criteria: Criteria) {
+        this.criteria.splice(this.criteria.indexOf(criteria), 1);
+    }
+
+    /**
      * Form submission.
      * Sends data to SGM service.
      */
@@ -145,7 +170,7 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
                 this.classService.createClass(new Class(this.authenticationService.userValue.response.data.teacher._id,
                     this.classForm.get('inputSubject').value, this.classForm.get('inputYear').value,
                     this.classForm.get('inputFrequencyRegime').value, this.classForm.get('inputLectiveYear').value,
-                    this.signedStudents)).subscribe(() => {
+                    this.signedStudents, this.criteria)).subscribe(() => {
                         this.error = false;
                         this.router.navigate(['/class/list']).then();
                     }, () => this.error = true
@@ -157,7 +182,7 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
                 this.classService.updateClass(new Class(this.authenticationService.userValue.response.data.teacher._id,
                     this.classForm.get('inputSubject').value, this.classForm.get('inputYear').value,
                     this.classForm.get('inputFrequencyRegime').value, this.classForm.get('inputLectiveYear').value,
-                    this.signedStudents, this._id_classUpdate)).subscribe(() => {
+                    this.signedStudents, this.criteria, this._id_classUpdate)).subscribe(() => {
                         this.error = false;
                         this.router.navigate(['/class/list']).then();
                     }, () => this.error = true

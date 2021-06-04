@@ -1,0 +1,8 @@
+.btn-add-criteria {
+    display: flex;
+    align-items: center;
+}
+
+.delete-criteria {
+    margin-left: 15px !important;
+}
