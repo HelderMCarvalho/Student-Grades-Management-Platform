@@ -153,8 +153,7 @@ router.put('/', function (req, res, next) {
             const classsUpdated = await sequelize.models.Class.findOne({
                 where: {
                     _id: req.body._id
-                },
-                include: {all: true, nested: true},
+                }, include: {all: true, nested: true},
             });
 
             // ---------- Process Students ----------
@@ -165,13 +164,43 @@ router.put('/', function (req, res, next) {
                 classsUpdated.addStudent(await sequelize.models.Student.findOne({where: {_id: student._id}}));
             }
 
-            classsUpdated.Students.forEach(student => {
+            for (const student of classsUpdated.Students) {
                 if (!req.body.Students.find(stubentInBody => stubentInBody._id === student._id)) {
                     // If the Student is associated but not in the received Students, then remove the Student from the
                     // Class
-                    student.removeNotes().then(() => classsUpdated.removeStudent(student));
+
+                    // First get the Student in Class + associations
+                    const StudentClass = await sequelize.models.Student_Class.findOne({
+                        where: {
+                            _id_student: student._id,
+                            _id_class: classsUpdated._id
+                        }, include: {all: true, nested: true},
+                    });
+                    if (StudentClass.Notes.length > 0) {
+                        // If the Student has Notes, delete them
+                        StudentClass.Notes.forEach(note => {
+                            sequelize.models.Note.destroy({
+                                where: {
+                                    _id: note._id,
+                                }
+                            });
+                        });
+                    }
+                    if (student.EvaluationComponents.length > 0) {
+                        // If the Student has Evaluation Components, delete them
+                        student.EvaluationComponents.forEach(evaluationComponent => {
+                            sequelize.models.EvaluationComponent.destroy({
+                                where: {
+                                    _id: evaluationComponent._id,
+                                }
+                            });
+                        });
+                    }
+
+                    // Finally, delete the Student
+                    classsUpdated.removeStudent(student);
                 }
-            });
+            }
             // ---------- END Process Students ----------
 
             // ---------- Process Criterion ----------
@@ -241,7 +270,7 @@ router.delete('/:_id', function (req, res, next) {
                     },
                     include: {all: true, nested: true}
                 });
-                student.Student_Class.Notes.forEach(studentClassNote=>{
+                student.Student_Class.Notes.forEach(studentClassNote => {
                     sequelize.models.Note.destroy({
                         where: {
                             _id: studentClassNote._id
@@ -416,6 +445,53 @@ router.post('/:_id/note/student/:_id_student', function (req, res, next) {
                 });
             });
         }
+    }
+
+    run().then();
+});
+
+// POST Evaluation Components
+router.post('/evaluationComponent', function (req, res, next) {
+    async function run() {
+        for (const evaluationComponent of req.body) {
+            if (evaluationComponent['grade']) {
+                // Check if Evaluation component exists
+                const evaluationComponentDB = await sequelize.models.EvaluationComponent.findOne({
+                        where: {
+                            _id_criteria: evaluationComponent['_id_criteria'],
+                            _id_student: evaluationComponent['_id_student']
+                        }
+                    }
+                );
+                if (evaluationComponentDB) {
+                    // If Evaluation Component exists, then update it
+                    await sequelize.models.EvaluationComponent.update(evaluationComponent, {
+                            where: {
+                                _id_criteria: evaluationComponent['_id_criteria'],
+                                _id_student: evaluationComponent['_id_student']
+                            }
+                        }
+                    );
+                } else {
+                    // If Evaluation Component doesn't exists, then create it
+                    sequelize.models.EvaluationComponent.create(evaluationComponent);
+                }
+            } else {
+                // Delete all Evaluation Components that dont have a Grade
+                await sequelize.models.EvaluationComponent.destroy({
+                    where: {
+                        _id_criteria: evaluationComponent['_id_criteria'],
+                        _id_student: evaluationComponent['_id_student']
+                    }
+                });
+            }
+        }
+
+        res.status(200).send({
+            response: {
+                message: 'Evaluation Components updated with success!'
+            }
+        });
     }
 
     run().then();

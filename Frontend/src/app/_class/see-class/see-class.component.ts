@@ -9,6 +9,7 @@ import {DialogCreateEditNoteComponent} from '../dialog-create-edit-note/dialog-c
 import {Note} from '../../_models/note';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {Student} from '../../_models/student';
+import {DialogCreateEditEvaluationComponent} from '../dialog-create-edit-evaluation/dialog-create-edit-evaluation.component';
 
 @Component({
     selector: 'app-see-class',
@@ -61,7 +62,7 @@ export class SeeClassComponent implements OnInit, OnDestroy {
      *             - new_note_class_student -> Create Note for Student in Class
      * @param student Student to add Note (only used when adding a Student Note in a Specific Class)
      */
-    openDialog(data: Class | Note, type: string, student?: Student): void {
+    openNoteDialog(data: Class | Note, type: string, student?: Student): void {
         switch (type) {
             case 'new_note_class': {
                 this.subscriptions.push(
@@ -123,6 +124,29 @@ export class SeeClassComponent implements OnInit, OnDestroy {
                 break;
             }
         }
+    }
+
+    /**
+     * Open Grades modal/dialog to create or update Student Grades
+     * @param student Student do add Grades
+     */
+    openStudentGradesDialog(student: Student) {
+        this.subscriptions.push(
+            this.dialog.open(DialogCreateEditEvaluationComponent, {
+                data: {
+                    student: student,
+                    criterion: this.classs.Criteria
+                }
+            }).afterClosed().subscribe(evaluationComponents => {
+                if (evaluationComponents) {
+                    this.subscriptions.push(
+                        this.classService.sendEvaluationComponents(evaluationComponents).subscribe(() => {}, () => {
+                            alert('Evaluation Components not updated!')
+                        })
+                    );
+                }
+            })
+        );
     }
 
     /**

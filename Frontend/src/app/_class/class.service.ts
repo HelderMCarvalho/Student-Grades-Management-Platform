@@ -7,6 +7,7 @@ import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {Note} from '../_models/note';
 import {Student} from '../_models/student';
+import {EvaluationComponent} from '../_models/evaluationComponent';
 
 @Injectable({
     providedIn: 'root'
@@ -107,6 +108,18 @@ export class ClassService {
      */
     createStudentClassNote(classs: Class, student: Student, note: Note): Observable<Note> {
         return this.http.post<Response<Note>>(`${environment.apiUrl}/classes/${classs._id}/note/student/${student._id}`, note).pipe(
+            map(response => {
+                return response.response.data;
+            })
+        );
+    }
+
+    /**
+     * POST Evaluation Component (the backend can determine what evaluation components will be created, updated and deleted)
+     * @param evaluationComponents Evaluation Components to CUD
+     */
+    sendEvaluationComponents(evaluationComponents: EvaluationComponent[]): Observable<null> {
+        return this.http.post<Response<null>>(`${environment.apiUrl}/classes/evaluationComponent`, evaluationComponents).pipe(
             map(response => {
                 return response.response.data;
             })

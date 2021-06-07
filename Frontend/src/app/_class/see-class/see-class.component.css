@@ -21,3 +21,7 @@
 .student-name-note p {
     margin: 0 15px 0 0;
 }
+
+.btn-grades {
+    min-height: 30px;
+}

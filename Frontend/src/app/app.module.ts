@@ -29,6 +29,7 @@ import {SeeClassComponent} from './_class/see-class/see-class.component';
 import {DialogCreateEditNoteComponent} from './_class/dialog-create-edit-note/dialog-create-edit-note.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDividerModule} from '@angular/material/divider';
+import {DialogCreateEditEvaluationComponent} from './_class/dialog-create-edit-evaluation/dialog-create-edit-evaluation.component';
 
 @NgModule({
     imports: [
@@ -61,6 +62,7 @@ import {MatDividerModule} from '@angular/material/divider';
         ListClassesComponent,
         SeeClassComponent,
         DialogCreateEditNoteComponent,
+        DialogCreateEditEvaluationComponent,
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

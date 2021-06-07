@@ -85,9 +85,8 @@
                                                     [control]="classForm.get('inputCriteriaPercentage')"></app-control-messages>
                                         </div>
                                         <div class="col-2 btn-add-criteria">
-                                            <button (click)="addCriteria()" class="btn btn-success" mat-raised-button
-                                                    type="button">Add Criteria
-                                            </button>
+                                            <a (click)="addCriteria()" class="btn btn-success" mat-raised-button>Add
+                                                Criteria</a>
                                         </div>
                                         <ng-container *ngIf="criteria.length > 0">
                                             <div *ngFor="let criteria of criteria" class="col-12">

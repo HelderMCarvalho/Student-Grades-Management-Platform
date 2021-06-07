@@ -60,7 +60,8 @@
                             <div class="col-12 class-info">
                                 <div class="class-info-title">
                                     <p>Notes</p>
-                                    <a (click)="openDialog(classs, 'new_note_class')" class="btn btn-just-icon btn-sm"
+                                    <a (click)="openNoteDialog(classs, 'new_note_class')"
+                                       class="btn btn-just-icon btn-sm"
                                        mat-raised-button>
                                         <span class="material-icons">add</span>
                                     </a>
@@ -77,7 +78,7 @@
                                                        mat-raised-button>
                                                         <span class="material-icons">delete</span>
                                                     </a>
-                                                    <a (click)="openDialog(note, 'update_note')"
+                                                    <a (click)="openNoteDialog(note, 'update_note')"
                                                        class="btn btn-warning btn-just-icon btn-sm pull-right"
                                                        mat-raised-button>
                                                         <span class="material-icons">edit</span>
@@ -97,11 +98,12 @@
                                     <ng-container *ngFor="let student of classs.Students">
                                         <div class="student-name-note">
                                             <p>({{student.code}}) {{student.firstName}} {{student.lastName}}</p>
-                                            <a (click)="openDialog(classs, 'new_note_class_student', student)"
-                                               class="btn btn-just-icon btn-sm"
-                                               mat-raised-button>
+                                            <a (click)="openNoteDialog(classs, 'new_note_class_student', student)"
+                                               class="btn btn-just-icon btn-sm" mat-raised-button>
                                                 <span class="material-icons">add</span>
                                             </a>
+                                            <a (click)="openStudentGradesDialog(student)" class="btn btn-sm btn-grades"
+                                               mat-raised-button>Grades</a>
                                         </div>
                                         <div *ngIf="student.Student_Class.Notes.length > 0" class="row">
                                             <div *ngFor="let note of student.Student_Class.Notes"
@@ -115,7 +117,7 @@
                                                                mat-raised-button>
                                                                 <span class="material-icons">delete</span>
                                                             </a>
-                                                            <a (click)="openDialog(note, 'update_note', student)"
+                                                            <a (click)="openNoteDialog(note, 'update_note', student)"
                                                                class="btn btn-warning btn-just-icon btn-sm pull-right"
                                                                mat-raised-button>
                                                                 <span class="material-icons">edit</span>
