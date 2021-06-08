@@ -104,13 +104,16 @@ router.post('/', function (req, res, next) {
 
         // If there are Students to associate to the Class
         if (req.body.Students.length > 0) {
-            req.body.Students.forEach(student => {
-                sequelize.models.Student.findOne({
-                    where: {
-                        _id: student._id
-                    }
-                }).then(student => classs.addStudent(student));
-            });
+            for (const student of req.body.Students) {
+                if (student._id) {
+                    // If the received Student have an Id, then he already exists in the DB
+                    classs.addStudent(await sequelize.models.Student.findOne({where: {_id: student._id}}));
+                } else {
+                    // If the received Student doesn't have an Id, then he was imported via CSV, and he has to be
+                    // created and associated to the Class
+                    classs.addStudent(await sequelize.models.Student.create(student));
+                }
+            }
         }
 
         // If there are Criterion to associate to the Class
@@ -161,7 +164,14 @@ router.put('/', function (req, res, next) {
             for (const student of req.body.Students) {
                 // Add every received Student (if we try to add a Student that is already in the Class then, that
                 // Student will be ignored)
-                classsUpdated.addStudent(await sequelize.models.Student.findOne({where: {_id: student._id}}));
+                if (student._id) {
+                    // If the received Student have an Id, then he already exists in the DB
+                    classsUpdated.addStudent(await sequelize.models.Student.findOne({where: {_id: student._id}}));
+                } else {
+                    // If the received Student doesn't have an Id, then he was imported via CSV, and he has to be
+                    // created and associated to the Class
+                    classsUpdated.addStudent(await sequelize.models.Student.create(student));
+                }
             }
 
             for (const student of classsUpdated.Students) {

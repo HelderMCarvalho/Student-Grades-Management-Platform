@@ -125,17 +125,31 @@
                                         </mat-autocomplete>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-12 text-center">
-                                    <p *ngIf="error && !activatedRoute.snapshot.paramMap.get('_id_class')"
-                                       class="invalid-feedback">Error creating Class!</p>
-                                    <p *ngIf="error && activatedRoute.snapshot.paramMap.get('_id_class')"
-                                       class="invalid-feedback">Error updating Class!</p>
-                                    <button *ngIf="!activatedRoute.snapshot.paramMap.get('_id_class')"
-                                            class="btn btn-success pull-right" mat-raised-button type="submit">Create
-                                    </button>
-                                    <button *ngIf="activatedRoute.snapshot.paramMap.get('_id_class')"
-                                            class="btn btn-success pull-right" mat-raised-button type="submit">Update
-                                    </button>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <input #studentsCSV (change)="onStudentsCSVChange($event)" hidden
+                                                   id="studentsCSV" type="file">
+                                            <button (click)="studentsCSV.click()" class="btn btn-info"
+                                                    mat-raised-button type="button">Import Students from CSV
+                                            </button>
+                                            <p>CSV format: "code,firstName,lastName"</p>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <p *ngIf="error && !activatedRoute.snapshot.paramMap.get('_id_class')"
+                                               class="invalid-feedback">Error creating Class!</p>
+                                            <p *ngIf="error && activatedRoute.snapshot.paramMap.get('_id_class')"
+                                               class="invalid-feedback">Error updating Class!</p>
+                                            <button *ngIf="!activatedRoute.snapshot.paramMap.get('_id_class')"
+                                                    class="btn btn-success pull-right" mat-raised-button type="submit">
+                                                Create
+                                            </button>
+                                            <button *ngIf="activatedRoute.snapshot.paramMap.get('_id_class')"
+                                                    class="btn btn-success pull-right" mat-raised-button type="submit">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="clearfix"></div>

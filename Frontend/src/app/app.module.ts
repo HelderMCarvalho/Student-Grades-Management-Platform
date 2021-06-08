@@ -21,6 +21,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
+import {NgxCsvParserModule} from 'ngx-csv-parser';
 import {ListClassesComponent} from './_class/list-classes/list-classes.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
@@ -51,7 +52,8 @@ import {DialogCreateEditEvaluationComponent} from './_class/dialog-create-edit-e
         MatSortModule,
         MatPaginatorModule,
         MatDialogModule,
-        MatDividerModule
+        MatDividerModule,
+        NgxCsvParserModule
     ],
     declarations: [
         AppComponent,

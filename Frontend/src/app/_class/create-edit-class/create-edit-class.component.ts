@@ -17,6 +17,7 @@ import {Year} from '../../_models/year';
 import {FrequencyRegime} from '../../_models/frequencyRegime';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Criteria} from '../../_models/criteria';
+import {NgxCsvParser, NgxCSVParserError} from 'ngx-csv-parser';
 
 @Component({
     selector: 'app-create-edit-class',
@@ -46,8 +47,9 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
     filteredStudents: Observable<Student[]>;
     @ViewChild('inputStudents') inputStudentsChild: ElementRef<HTMLInputElement>;
 
-    constructor(private formBuilder: FormBuilder, private sgmService: SgmService, private classService: ClassService,
-                private authenticationService: AuthenticationService, private router: Router, public activatedRoute: ActivatedRoute) { }
+    constructor(private formBuilder: FormBuilder, private ngxCsvParser: NgxCsvParser, private sgmService: SgmService,
+                private classService: ClassService, private authenticationService: AuthenticationService, private router: Router,
+                public activatedRoute: ActivatedRoute) { }
 
     ngOnInit(): void {
         this.classForm = this.formBuilder.group({
@@ -152,6 +154,38 @@ export class CreateEditClassComponent implements OnInit, OnDestroy {
      */
     deleteCriteria(criteria: Criteria) {
         this.criteria.splice(this.criteria.indexOf(criteria), 1);
+    }
+
+    /**
+     * Adds the CSV imported Students to the Class
+     * @param $event File Input event
+     */
+    onStudentsCSVChange($event: any): void {
+        const file = $event.target.files[0];
+        this.subscriptions.push(
+            this.ngxCsvParser.parse(file, {header: true, delimiter: ','}).pipe().subscribe((students: Array<Student>) => {
+                students.forEach(student => {
+                    // Check if imported Student is not signed to the Class
+                    if (!this.signedStudents.find(signedStudent => signedStudent.code === +student.code)) {
+                        // Check if the imported Student already exists in the "allStudents" (all Students received from DB)
+                        const foundStudent = this.allStudents.find(allStudent => allStudent.code === +student.code);
+                        if (foundStudent) {
+                            // Add Student to the Signed Students
+                            this.signedStudents.push(foundStudent);
+                            // Remove the Student from the "allStudents" so that it doesn't appear again in the search
+                            this.allStudents.splice(this.allStudents.indexOf(foundStudent), 1);
+                            // Update the list by forcing a "valueChanges" event to execute "_filter"
+                            this.classForm.get('inputStudents').setValue(null);
+                        } else {
+                            // Add Student to the Signed Students
+                            this.signedStudents.push(student);
+                        }
+                    }
+                });
+            }, (error: NgxCSVParserError) => {
+                alert(error.message)
+            })
+        );
     }
 
     /**
