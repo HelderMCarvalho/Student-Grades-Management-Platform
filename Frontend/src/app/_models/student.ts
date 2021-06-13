@@ -1,5 +1,6 @@
 import {Class} from './class';
 import {EvaluationComponent} from './evaluationComponent';
+import {StudentClass} from './studentClass';
 
 export class Student {
     _id: number;
@@ -8,6 +9,7 @@ export class Student {
     code: number;
     photo_blob: string;
     EvaluationComponents: EvaluationComponent[];
+    Student_Class: StudentClass;
     Classes: Class[];
 
     /**

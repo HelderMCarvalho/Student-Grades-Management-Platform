@@ -1,0 +1,140 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form [formGroup]="classForm">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Course</mat-label>
+                                        <label for="inputCourse"></label>
+                                        <input formControlName="inputCourse" id="inputCourse" matInput type="text">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Subject</mat-label>
+                                        <label for="inputSubject"></label>
+                                        <input formControlName="inputSubject" id="inputSubject" matInput type="text">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Year</mat-label>
+                                        <label for="inputYear"></label>
+                                        <input formControlName="inputYear" id="inputYear" matInput type="text">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Frequency Regime</mat-label>
+                                        <label for="inputFrequencyRegime"></label>
+                                        <input formControlName="inputFrequencyRegime" id="inputFrequencyRegime" matInput
+                                               type="text">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-12 col-md-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Lective Year</mat-label>
+                                        <label for="inputLectiveYear"></label>
+                                        <input formControlName="inputLectiveYear" id="inputLectiveYear" matInput
+                                               type="text">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-12 class-info">
+                                <div class="class-info-title">
+                                    <p>Criterion</p>
+                                </div>
+                                <p *ngIf="classs.Criteria && classs.Criteria.length == 0">There are no Criterion!</p>
+                                <ng-container *ngIf="classs.Criteria && classs.Criteria.length > 0">
+                                    <div *ngFor="let criteria of classs.Criteria">
+                                        {{criteria.name}}: {{criteria.percentage}}%
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div class="col-12 class-info">
+                                <div class="class-info-title">
+                                    <p>Notes</p>
+                                    <a (click)="openNoteDialog(classs, 'new_note_class')"
+                                       class="btn btn-just-icon btn-sm"
+                                       mat-raised-button>
+                                        <span class="material-icons">add</span>
+                                    </a>
+                                </div>
+                                <p *ngIf="classs.Notes.length == 0">There are no notes!</p>
+                                <div *ngIf="classs.Notes.length > 0" class="row">
+                                    <div *ngFor="let note of classs.Notes" class="col-sm-12 col-md-4">
+                                        <div class="card note">
+                                            <div class="card-body">
+                                                {{note.content}}
+                                                <div>
+                                                    <a (click)="deleteNote(note)"
+                                                       class="btn btn-danger btn-just-icon btn-sm pull-right"
+                                                       mat-raised-button>
+                                                        <span class="material-icons">delete</span>
+                                                    </a>
+                                                    <a (click)="openNoteDialog(note, 'update_note')"
+                                                       class="btn btn-warning btn-just-icon btn-sm pull-right"
+                                                       mat-raised-button>
+                                                        <span class="material-icons">edit</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 class-info">
+                                <div class="class-info-title">
+                                    <p>Students</p>
+                                </div>
+                                <p *ngIf="classs.Students.length === 0">There are no Students!</p>
+                                <ng-container *ngIf="classs.Students.length > 0">
+                                    <ng-container *ngFor="let student of classs.Students">
+                                        <div class="student-name-note">
+                                            <p>({{student.code}}) {{student.firstName}} {{student.lastName}}</p>
+                                            <a (click)="openNoteDialog(classs, 'new_note_class_student', student)"
+                                               class="btn btn-just-icon btn-sm" mat-raised-button>
+                                                <span class="material-icons">add</span>
+                                            </a>
+                                            <a (click)="openStudentGradesDialog(student)" class="btn btn-sm btn-grades"
+                                               mat-raised-button>Grades</a>
+                                        </div>
+                                        <div *ngIf="student.Student_Class.Notes.length > 0" class="row">
+                                            <div *ngFor="let note of student.Student_Class.Notes"
+                                                 class="col-sm-12 col-md-4">
+                                                <div class="card note">
+                                                    <div class="card-body">
+                                                        {{note.content}}
+                                                        <div>
+                                                            <a (click)="deleteNote(note, student)"
+                                                               class="btn btn-danger btn-just-icon btn-sm pull-right"
+                                                               mat-raised-button>
+                                                                <span class="material-icons">delete</span>
+                                                            </a>
+                                                            <a (click)="openNoteDialog(note, 'update_note', student)"
+                                                               class="btn btn-warning btn-just-icon btn-sm pull-right"
+                                                               mat-raised-button>
+                                                                <span class="material-icons">edit</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

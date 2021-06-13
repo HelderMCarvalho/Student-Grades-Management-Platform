@@ -1,0 +1,27 @@
+.class-info-title, .student-name-note {
+    display: flex;
+    align-items: center;
+}
+
+.class-info {
+    margin-bottom: 18px;
+}
+
+.class-info-title p {
+    font-size: smaller;
+    margin-bottom: unset;
+    margin-right: 15px;
+}
+
+.note {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.student-name-note p {
+    margin: 0 15px 0 0;
+}
+
+.btn-grades {
+    min-height: 30px;
+}

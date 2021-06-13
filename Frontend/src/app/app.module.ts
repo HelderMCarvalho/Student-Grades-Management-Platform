@@ -21,10 +21,16 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
+import {NgxCsvParserModule} from 'ngx-csv-parser';
 import {ListClassesComponent} from './_class/list-classes/list-classes.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {SeeClassComponent} from './_class/see-class/see-class.component';
+import {DialogCreateEditNoteComponent} from './_class/dialog-create-edit-note/dialog-create-edit-note.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatDividerModule} from '@angular/material/divider';
+import {DialogCreateEditEvaluationComponent} from './_class/dialog-create-edit-evaluation/dialog-create-edit-evaluation.component';
 
 @NgModule({
     imports: [
@@ -44,7 +50,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
         MatIconModule,
         MatTableModule,
         MatSortModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatDialogModule,
+        MatDividerModule,
+        NgxCsvParserModule
     ],
     declarations: [
         AppComponent,
@@ -53,6 +62,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
         RegisterComponent,
         CreateEditClassComponent,
         ListClassesComponent,
+        SeeClassComponent,
+        DialogCreateEditNoteComponent,
+        DialogCreateEditEvaluationComponent,
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
