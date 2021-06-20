@@ -1,23 +1,13 @@
 const {Sequelize} = require('sequelize');
 
-const sequelize = new Sequelize('eduard25_mtw', 'eduard25_ipca', '?k242qaI', {
-    host: 'eduardoliveiradev.pt',
-    port: '1433',
-    dialect: 'mssql',
-    dialectOptions: {
-        encrypt: true
-    },
-    logging: false
-});
-
-/*const sequelize = new Sequelize('eduard25_mtw', 'eduard25_ipca', '?k242qaI', {
+const sequelize = new Sequelize('sgmpdb', 'sgmp1', 'sgmp1', {
     dialect: 'sqlite',
     storage: 'storage.sqlite',
     logging: false,
     dialectOptions: {
         encrypt: true
     }
-});*/
+});
 
 const Course = require('./models/Course')(sequelize, Sequelize);
 const Subject = require('./models/Subject')(sequelize, Sequelize);
@@ -117,28 +107,6 @@ sequelize.authenticate().then(() => {
                 code: 11111,
                 password: 'b3eebd72b43b377f8c814c6799723c89c2d134181a9bde7613e2f7c86916522232504510909adcd7be43e84d3b1c2d4c51985bdfc4804633330fc75816d03ff2'
             }]);
-            /!*await Class.create({
-                lective_year: '20/21',
-                _id_subject: 1,
-                _id_teacher: 1,
-                _id_frequency_regime: 1,
-                _id_year: 1,
-            });*!/
-            /!*await Criteria.create({
-                _id_class: 1,
-                name: 'Test',
-                percentage: 75.00
-            });*!/
-            /!*await EvaluationComponent.create({
-                _id_criteria: 2,
-                _id_student: 1,
-                grade: 15.00
-            });*!/
-            /!*const r = await Year.findOne({
-                include: {all: true, nested: true}
-            });
-            console.log('Result:', r/!*JSON.stringify(r, null, 2)*!/);*!/
-
             console.log('Synced');
         }
 
